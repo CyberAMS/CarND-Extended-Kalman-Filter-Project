@@ -12,32 +12,39 @@ using std::vector;
  * Constructor.
  */
 FusionEKF::FusionEKF() {
-  is_initialized_ = false;
+	is_initialized_ = false;
 
-  previous_timestamp_ = 0;
+	previous_timestamp_ = 0;
 
-  // initializing matrices
-  R_laser_ = MatrixXd(2, 2);
-  R_radar_ = MatrixXd(3, 3);
-  H_laser_ = MatrixXd(2, 4);
-  Hj_ = MatrixXd(3, 4);
+	// initializing matrices
+	R_laser_ = MatrixXd(2, 2);
+	R_radar_ = MatrixXd(3, 3);
+	H_laser_ = MatrixXd(2, 4);
+	Hj_ = MatrixXd(3, 4);
 
-  //measurement covariance matrix - laser
-  R_laser_ << 0.0225, 0,
-        0, 0.0225;
+	// measurement covariance matrix - laser
+	R_laser_ << 0.0225,      0,
+                     0, 0.0225;
 
-  //measurement covariance matrix - radar
-  R_radar_ << 0.09, 0, 0,
-        0, 0.0009, 0,
-        0, 0, 0.09;
+	// measurement covariance matrix - radar
+	R_radar_ << 0.09,      0,    0,
+                   0, 0.0009,    0,
+                   0,      0, 0.09;
 
-  /**
-  TODO:
-    * Finish initializing the FusionEKF.
-    * Set the process and measurement noises
-  */
-
-
+	/**
+	TODO:
+		* Finish initializing the FusionEKF.
+		* Set the process and measurement noises
+	*/
+	
+	// process noise
+	H_laser << 0, 0, 0, 0,
+	           0, 0, 0, 0;
+			   
+	// measurement noise
+	Hj_ << 0, 0, 0, 0,
+	       0, 0, 0, 0,
+		   0, 0, 0, 0;
 }
 
 /**
