@@ -3,7 +3,8 @@
 #include "Eigen/Dense"
 
 class KalmanFilter {
-public:
+	
+	public:
 
   // state vector
   Eigen::VectorXd x_;
@@ -50,6 +51,7 @@ public:
    * using the process model
    * @param delta_T Time between k and k+1 in s
    */
+	 // => Not sure why template comment lists a parameter here!
   void Predict();
 
   /**

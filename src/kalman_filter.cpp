@@ -12,12 +12,14 @@ KalmanFilter::~KalmanFilter() {}
 
 void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
                         MatrixXd &H_in, MatrixXd &R_in, MatrixXd &Q_in) {
+													
   x_ = x_in;
   P_ = P_in;
   F_ = F_in;
   H_ = H_in;
   R_ = R_in;
   Q_ = Q_in;
+	
 }
 
 void KalmanFilter::Predict() {
@@ -32,6 +34,7 @@ void KalmanFilter::Predict() {
 	// predict noise
 	MatrixXd Ft = F_.transpose();
 	P_ = (F_ * P_ * Ft) + Q_;
+	
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
@@ -53,6 +56,7 @@ void KalmanFilter::Update(const VectorXd &z) {
 	// new state and noise
 	x_ = x_ + (K * y);
 	P_ = (I - K * H_) * P_;
+	
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
@@ -60,4 +64,5 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	TODO:
 		* update the state by using Extended Kalman Filter equations
 	*/
+	
 }

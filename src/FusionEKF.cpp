@@ -12,6 +12,7 @@ using std::vector;
  * Constructor.
  */
 FusionEKF::FusionEKF() {
+	
 	is_initialized_ = false;
 
 	previous_timestamp_ = 0;
@@ -24,12 +25,12 @@ FusionEKF::FusionEKF() {
 
 	// measurement covariance matrix - laser
 	R_laser_ << 0.0225,      0,
-                     0, 0.0225;
+                   0, 0.0225;
 
 	// measurement covariance matrix - radar
 	R_radar_ << 0.09,      0,    0,
-                   0, 0.0009,    0,
-                   0,      0, 0.09;
+                 0, 0.0009,    0,
+                 0,      0, 0.09;
 
 	/**
 	TODO:
@@ -37,7 +38,7 @@ FusionEKF::FusionEKF() {
 		* Set the process and measurement noises
 	*/
 	
-	// process noise
+	// process noise ??? => measurement matrix !!!
 	H_laser << 0, 0, 0, 0,
 	           0, 0, 0, 0;
 			   
@@ -45,6 +46,7 @@ FusionEKF::FusionEKF() {
 	Hj_ << 0, 0, 0, 0,
 	       0, 0, 0, 0,
 		   0, 0, 0, 0;
+			 
 }
 
 /**
@@ -54,36 +56,63 @@ FusionEKF::~FusionEKF() {}
 
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
-
   /*****************************************************************************
    *  Initialization
    ****************************************************************************/
   if (!is_initialized_) {
+		
     /**
     TODO:
       * Initialize the state ekf_.x_ with the first measurement.
       * Create the covariance matrix.
       * Remember: you'll need to convert radar from polar to cartesian coordinates.
     */
+		
     // first measurement
     cout << "EKF: " << endl;
     ekf_.x_ = VectorXd(4);
     ekf_.x_ << 1, 1, 1, 1;
 
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-      /**
-      Convert radar from polar to cartesian coordinates and initialize state.
-      */
-    }
-    else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
+			
+			/**
+			Convert radar from polar to cartesian coordinates and initialize state.
+			*/
+			
+      float ro;
+      float theta;
+      float ro_dot;
+      iss >> ro;
+      iss >> theta;
+      iss >> ro_dot;
+      meas_package.raw_measurements_ << ro, theta, ro_dot;
+	
+			// assign values to initial state vector
+			ekf_.x_ << px, py, vx, vy;	  
+	  
+    } else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
+			
       /**
       Initialize state.
       */
+	  
+			// collect initial state values
+			float px;
+			float py;
+			meas_package.raw_measurements_ >> px, py;
+			float vx = 0;
+			float vy = 0;
+			
+			// assign values to initial state vector
+			ekf_.x_ << px, py, vx, vy;
+	  
     }
 
     // done initializing, no need to predict or update
     is_initialized_ = true;
+		
     return;
+		
   }
 
   /*****************************************************************************
@@ -91,12 +120,12 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    ****************************************************************************/
 
   /**
-   TODO:
-     * Update the state transition matrix F according to the new elapsed time.
+  TODO:
+    * Update the state transition matrix F according to the new elapsed time.
       - Time is measured in seconds.
-     * Update the process noise covariance matrix.
-     * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
-   */
+    * Update the process noise covariance matrix.
+    * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
+  */
 
   ekf_.Predict();
 
@@ -105,15 +134,21 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    ****************************************************************************/
 
   /**
-   TODO:
-     * Use the sensor type to perform the update step.
-     * Update the state and covariance matrices.
-   */
+  TODO:
+    * Use the sensor type to perform the update step.
+    * Update the state and covariance matrices.
+  */
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
     // Radar updates
+	
+	ekf_.UpdateEKF(meas_package.raw_measurements_);
+	
   } else {
     // Laser updates
+	
+	ekf_.Update(meas_package.raw_measurements_);
+	
   }
 
   // print the output
