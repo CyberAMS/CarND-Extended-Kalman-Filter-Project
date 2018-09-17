@@ -35,8 +35,11 @@ std::string hasData(std::string s) {
 
 int main() {
 	
+	// define constants
+	const bool bDISPLAY = false;
+	
   uWS::Hub h;
-
+	
   // Create a Kalman Filter instance
   FusionEKF fusionEKF;
 
@@ -77,8 +80,8 @@ int main() {
 						
       	  	meas_package.sensor_type_ = MeasurementPackage::LASER;
           	meas_package.raw_measurements_ = VectorXd(2);
-          	float px;
-      	  	float py;
+          	double px;
+      	  	double py;
           	iss >> px;
           	iss >> py;
           	meas_package.raw_measurements_ << px, py;
@@ -89,9 +92,9 @@ int main() {
 
       	  		meas_package.sensor_type_ = MeasurementPackage::RADAR;
           		meas_package.raw_measurements_ = VectorXd(3);
-          		float roh;
-      	  		float theta;
-      	  		float roh_dot;
+          		double roh;
+      	  		double theta;
+      	  		double roh_dot;
           		iss >> roh;
           		iss >> theta;
           		iss >> roh_dot;
@@ -100,10 +103,10 @@ int main() {
           		meas_package.timestamp_ = timestamp;
           }
 					
-          float x_gt;
-					float y_gt;
-					float vx_gt;
-					float vy_gt;
+          double x_gt;
+					double y_gt;
+					double vx_gt;
+					double vy_gt;
 					iss >> x_gt;
 					iss >> y_gt;
 					iss >> vx_gt;
@@ -121,13 +124,13 @@ int main() {
 					//Push the current estimated x,y positon from the Kalman filter's state vector
 					VectorXd estimate(4);
 
-					double p_x = fusionEKF.ekf_.x_(0);
-					double p_y = fusionEKF.ekf_.x_(1);
+					double px = fusionEKF.ekf_.x_(0);
+					double py = fusionEKF.ekf_.x_(1);
 					double v1  = fusionEKF.ekf_.x_(2);
 					double v2 = fusionEKF.ekf_.x_(3);
 
-					estimate(0) = p_x;
-					estimate(1) = p_y;
+					estimate(0) = px;
+					estimate(1) = py;
 					estimate(2) = v1;
 					estimate(3) = v2;
     	  
@@ -136,14 +139,16 @@ int main() {
 					VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
 
           json msgJson;
-          msgJson["estimate_x"] = p_x;
-          msgJson["estimate_y"] = p_y;
+          msgJson["estimate_x"] = px;
+          msgJson["estimate_y"] = py;
           msgJson["rmse_x"] =  RMSE(0);
           msgJson["rmse_y"] =  RMSE(1);
           msgJson["rmse_vx"] = RMSE(2);
           msgJson["rmse_vy"] = RMSE(3);
           auto msg = "42[\"estimate_marker\"," + msgJson.dump() + "]";
-          // std::cout << msg << std::endl;
+					if bDISPLAY {
+						std::cout << msg << std::endl;
+					}
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
 	  
         }

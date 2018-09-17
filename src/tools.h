@@ -30,7 +30,12 @@ class Tools {
   * A helper method to calculate Jacobians.
   */
   MatrixXd CalculateJacobian(const VectorXd& x_state);
-
+	
+	private:
+	
+	// boolean for display debug messages
+	const bool bDISPLAY;
+	
 };
 
 #endif /* TOOLS_H_ */

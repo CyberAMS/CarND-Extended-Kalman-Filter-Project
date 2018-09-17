@@ -48,6 +48,15 @@ class FusionEKF {
   Eigen::MatrixXd H_laser_;
   Eigen::MatrixXd Hj_;
 	
+	// boolean for display debug messages
+	const bool bDISPLAY;
+	
+	// constants for variable dimensions
+	const int NUM_LASER_MEASUREMENTS;
+	const int NUM_RADAR_MEASUREMENTS;
+	const int NUM_STATES;
+	const int NUM_OBSERVABLE_STATES;
+	
 };
 
 #endif /* FusionEKF_H_ */

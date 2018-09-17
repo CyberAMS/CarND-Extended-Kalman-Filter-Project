@@ -66,6 +66,11 @@ class KalmanFilter {
    */
   void UpdateEKF(const Eigen::VectorXd &z);
 
+	private:
+	
+	// boolean for display debug messages
+	const bool bDISPLAY;
+
 };
 
 #endif /* KALMAN_FILTER_H_ */

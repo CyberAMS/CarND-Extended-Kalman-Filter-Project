@@ -14,6 +14,7 @@ using std::vector;
 FusionEKF::FusionEKF() {
 	
 	// define constants
+	const bool bDISPLAY = true;
 	const int NUM_LASER_MEASUREMENTS = 2;
 	const int NUM_RADAR_MEASUREMENTS = 3;
 	const int NUM_STATES = 4;
@@ -48,29 +49,37 @@ FusionEKF::FusionEKF() {
 	H_laser_ << 1, 0, 0, 0,
 						  0, 1, 0, 0;
 			   
-	// Jacobian for measurement noise
+	// Jacobian for measurement noise template
 	Hj_ << 1, 1, 0, 0,
 	       1, 1, 0, 0,
 		     1, 1, 1, 1;
 	
-	// initialize KALMAN filter object
+	// state vector template
 	x_init = VectorXd(NUM_STATES);
 	x_init << 1, 1, 1, 1;
+	
+	// initial error covariance matrix
 	P_init = MatrixXd(NUM_STATES, NUM_STATES);
 	P_init << 1, 0,    0,    0, // measurement for position available at the beginning
 						0, 1,    0,    0, // measurement for position available at the beginning
 						0, 0, 1000,    0, // very uncertain velocity at the beginning
 						0, 0,    0, 1000; // very uncertain velocity at the beginning
+	
+	// state-transition matrix template
 	F_init = MatrixXd(NUM_STATES, NUM_STATES);
 	F_init << 1, 0, 1, 0,
 						0, 1, 0, 1,
 						0, 0, 1, 0,
 						0, 0, 0, 1;
+						
+	// process noise covariance matrix template
 	Q_init = MatrixXd(NUM_STATES, NUM_STATES);
 	Q_init << 1, 0, 1, 0,
 						0, 1, 0, 1,
 						1, 0, 1, 0,
 						0, 1, 0, 1;
+	
+	// initialize KALMAN filter object
 	ekf_.Init(x_init, P_init, F_init, H_laser_, R_laser_, Q_init);
 	
 }
@@ -84,8 +93,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	
 	// define constants
 	const int ZERO_DETECTION = 0.0001;
-  const float NOISE_AX = 9.0;
-	const float NOISE_AY = 9.0;
+  const double NOISE_AX = 9.0;
+	const double NOISE_AY = 9.0;
 	
   /*****************************************************************************
    *  Initialization
@@ -99,8 +108,16 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       * Remember: you'll need to convert radar from polar to cartesian coordinates.
     */
 		
-    // first measurement
-    cout << "EKF: " << endl;
+		// display message if required
+		if bDISPLAY {
+			cout << "EKF: ProcessMeasurement - Start" << endl;
+			cout << "  Time stamp: " << measurement_pack.timestamp_ << endl;
+			cout << "  Sensor type: " << measurement_pack.sensor_type_ << endl;
+			cout << "  Raw measurements: " << meas_package.raw_measurements_ << endl;
+			cout << "  Inititialized: " << is_initialized_ << endl;
+		}
+
+		// first measurement
     ekf_.x_ = VectorXd(4);
     ekf_.x_ << 1, 1, 1, 1;
 
@@ -111,22 +128,22 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 			*/
 			
 			// collect initial state values
-      float roh;
-      float theta;
-      float roh_dot;
+      double roh;
+      double theta;
+      double roh_dot;
       meas_package.raw_measurements_ >> roh, theta, roh_dot;
 			
   	  // coordinate convertion from polar to cartesian
-  	  float px = rho * cos(phi);
-      if (px < ZERO_DETECTION) {
-        x = ZERO_DETECTION; // avoid value close to zero
+  	  double px = rho * cos(phi);
+      if (fabs(px) < ZERO_DETECTION) {
+        px = ((px > 0) - (px < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
       }
-  	  float py = rho * sin(phi);
-      if (py < ZERO_DETECTION) {
-        py = ZERO_DETECTION; // avoid value close to zero
+  	  double py = rho * sin(phi);
+      if (fabs(py) < ZERO_DETECTION) {
+        py = ((py > 0) - (py < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
       }
-  	  float vx = rho_dot * cos(phi);
-			float vy = rho_dot * sin(phi);
+  	  double vx = rho_dot * cos(phi);
+			double vy = rho_dot * sin(phi);
 			
 			// assign values to initial state vector
 			ekf_.x_ << px, py, vx, vy;	  
@@ -138,11 +155,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       */
 	  
 			// collect initial state values
-			float px;
-			float py;
+			double px;
+			double py;
 			meas_package.raw_measurements_ >> px, py;
-			float vx = 0;
-			float vy = 0;
+			double vx = 0;
+			double vy = 0;
 			
 			// assign values to initial state vector
 			ekf_.x_ << px, py, vx, vy;
@@ -151,6 +168,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 		
 		// done initializing, no need to predict or update
     is_initialized_ = true;
+		
+		if bDISPLAY {
+			cout << "  Inititialized: " << is_initialized_ << endl;
+			cout << "  EKF state x: " << ekf_.x_ << endl;
+			cout << "  EKF error noise P: " << ekf_.P_ << endl;
+			cout << "--- EKF: ProcessMeasurement - End" << endl;
+		}
 		
     return;
 		
@@ -171,10 +195,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
   */
 	
-  float dt = (current_timestamp - previous_timestamp_) / 1000.0 / 1000.0;
-  float dt_2 = dt * dt;
-  float dt_3 = dt_2 * dt;
-  float dt_4 = dt_3 * dt;
+  double dt = (current_timestamp - previous_timestamp_) / 1000.0 / 1000.0;
+  double dt_2 = dt * dt;
+  double dt_3 = dt_2 * dt;
+  double dt_4 = dt_3 * dt;
 	
 	// update the state transition matrix
 	ekf_.F_(1, 3) = dt;
@@ -206,12 +230,17 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
     // Radar updates
 	
-	ekf_.UpdateEKF(meas_package.raw_measurements_);
+		Tools tools;
+		ekf_.H_ = tools.CalculateJacobian(ekf_.x_);
+		ekf_.R_ = R_radar_;
+		ekf_.UpdateEKF(meas_package.raw_measurements_);
 	
   } else {
     // Laser updates
 	
-	ekf_.Update(meas_package.raw_measurements_);
+		ekf_.H_ = H_laser_;
+		ekf_.R_ = R_laser_;
+		ekf_.Update(meas_package.raw_measurements_);
 	
   }
 	
@@ -219,7 +248,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	previous_timestamp_ = current_timestamp;
 	
   // print the output
-  cout << "x_ = " << ekf_.x_ << endl;
-  cout << "P_ = " << ekf_.P_ << endl;
+	if bDISPLAY {
+		cout << "  Delta time: " << dt << endl;
+		cout << "  EKF model F: " << ekf_.F_ << endl;
+		cout << "  EKF process noise Q: " << ekf_.Q_ << endl;
+		cout << "  EKF state x: " << ekf_.x_ << endl;
+		cout << "  EKF error noise P: " << ekf_.P_ << endl;
+		cout << "--- EKF: ProcessMeasurement - End" << endl;
+	}
 	
 }
