@@ -134,16 +134,16 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       measurement_pack.raw_measurements_ >> rho, theta, rho_dot;
 			
   	  // coordinate convertion from polar to cartesian
-  	  double px = rho * cos(phi);
+  	  double px = rho * cos(theta);
       if (fabs(px) < ZERO_DETECTION) {
         px = ((px > 0) - (px < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
       }
-  	  double py = rho * sin(phi);
+  	  double py = rho * sin(theta);
       if (fabs(py) < ZERO_DETECTION) {
         py = ((py > 0) - (py < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
       }
-  	  double vx = rho_dot * cos(phi);
-			double vy = rho_dot * sin(phi);
+  	  double vx = rho_dot * cos(theta);
+			double vy = rho_dot * sin(theta);
 			
 			// assign values to initial state vector
 			ekf_.x_ << px, py, vx, vy;	  
