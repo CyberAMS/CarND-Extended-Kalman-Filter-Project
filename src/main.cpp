@@ -89,13 +89,13 @@ int main() {
 
       	  		meas_package.sensor_type_ = MeasurementPackage::RADAR;
           		meas_package.raw_measurements_ = VectorXd(3);
-          		float ro;
+          		float roh;
       	  		float theta;
-      	  		float ro_dot;
-          		iss >> ro;
+      	  		float roh_dot;
+          		iss >> roh;
           		iss >> theta;
-          		iss >> ro_dot;
-          		meas_package.raw_measurements_ << ro, theta, ro_dot;
+          		iss >> roh_dot;
+          		meas_package.raw_measurements_ << roh, theta, roh_dot;
           		iss >> timestamp;
           		meas_package.timestamp_ = timestamp;
           }

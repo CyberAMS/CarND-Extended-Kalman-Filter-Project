@@ -35,7 +35,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 	}
 
 	// accumulate squared residuals
-	for(unsigned int i=0; i < estimations.size(); ++i){
+	for(unsigned int i = 0; i < estimations.size(); ++i){
 
 		VectorXd residual = estimations[i] - ground_truth[i];
 
@@ -84,7 +84,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	float c2 = sqrt(c1);
 	float c3 = (c1 * c2);
 
-	//check division by zero
+	//check division by zero (it's sufficient to check c1 as c2 and c3 only depend on c1 being zero)
 	if(fabs(c1) < ZERO_DETECTION){
 		
 		cout << "CalculateJacobian () - Error - Division by Zero" << endl;

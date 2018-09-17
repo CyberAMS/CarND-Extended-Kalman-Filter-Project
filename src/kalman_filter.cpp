@@ -1,5 +1,7 @@
 #include "kalman_filter.h"
 
+#define PI acos(-1.0)
+
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
@@ -29,7 +31,7 @@ void KalmanFilter::Predict() {
 	*/
   	
 	// predict state
-	x_ = (F_ * x_) + u_;
+	x_ = F_ * x_;
 	
 	// predict noise
 	MatrixXd Ft = F_.transpose();
@@ -43,19 +45,11 @@ void KalmanFilter::Update(const VectorXd &z) {
 		* update the state by using Kalman Filter equations
 	*/
 	
-	// define constants
-	MatrixXd I = MatrixXd::Identity(2, 2);
+	// calculate y
+	VectorXd y = z - H_ * x_;
 
-	// matrix calculations
-	VectorXd y = z - H * x;
-	MatrixXd Ht = H.transpose();
-	MatrixXd S = H * P * Ht + R;
-	MatrixXd Si = S.inverse();
-	MatrixXd K =  P * Ht * Si;
-
-	// new state and noise
-	x_ = x_ + (K * y);
-	P_ = (I - K * H_) * P_;
+	// call function to update with this y value
+	UpdateWithY(y);
 	
 }
 
@@ -64,5 +58,57 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	TODO:
 		* update the state by using Extended Kalman Filter equations
 	*/
+	
+	// define constants
+	const int NUM_RADAR_MEASUREMENTS = 3;
+
+	// get cartesian state variables
+  float px;
+  float py;
+  float vx;
+  float vy;
+	x_ >> px, py, vx, vy;
+	
+	// calculate polar state variables
+  float rho = sqrt((px * px) + (py * py));
+  float theta = atan2(py, px);
+  float rho_dot = ((px * vx) + (py * vy)) / rho;
+	
+	// calculate h
+  VectorXd h = VectorXd(NUM_RADAR_MEASUREMENTS);
+  h << rho, theta, rho_dot;
+
+	// calculate y
+	VectorXd y = z - h;
+  while (y(1) > PI || y(1) < -PI ) {
+    if (y(1) > PI) {
+      y(1) -= PI;
+    } else {
+      y(1) += M_PI;
+    }
+	}
+	
+	// call function to update with this y value
+	UpdateWithY(y);
+	
+}
+
+void KalmanFilter::UpdateWithY(const VectorXd &y){
+	
+	// define constants
+	const int NUM_STATES = 4;
+
+	// calculate identity matrix
+	MatrixXd I = MatrixXd::Identity(NUM_STATES, NUM_STATES);
+	
+	// calculate matrices
+	MatrixXd Ht = H_.transpose();
+	MatrixXd S = H_ * P_ * Ht + R_;
+	MatrixXd Si = S.inverse();
+	MatrixXd K =  P_ * Ht * Si;
+
+	// new state and noise
+	x_ = x_ + (K * y);
+	P_ = (I - K * H_) * P_;
 	
 }
