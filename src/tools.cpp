@@ -8,7 +8,7 @@ using std::vector;
 Tools::Tools() {
 	
 	// define constants
-	const bool bDISPLAY = true;
+	// const bool bDISPLAY = true;
 	
 }
 
@@ -27,8 +27,8 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 	// display message if required	
 	if (bDISPLAY) {
 		cout << "Tools: CalculateRMSE - Start" << endl;
-		cout << "  Estimations: " << estimations << endl;
-		cout << "  Ground truth: " << ground_truth << endl;
+		// cout << "  Estimations: " << estimations << endl; // produces error message
+		// cout << "  Ground truth: " << ground_truth << endl; // produces error message
 	}
 
 	// initialize output
@@ -88,7 +88,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	// display message if required	
 	if (bDISPLAY) {
 		cout << "Tools: CalculateJacobian - Start" << endl;
-		cout << "  State x (px, py, vx, vy): " << x_ << endl;
+		cout << "  State x (px, py, vx, vy): " << x_state << endl;
 	}
 
 	// initialize output
