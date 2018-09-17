@@ -113,7 +113,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 			cout << "EKF: ProcessMeasurement - Start" << endl;
 			cout << "  Time stamp: " << measurement_pack.timestamp_ << endl;
 			cout << "  Sensor type: " << measurement_pack.sensor_type_ << endl;
-			cout << "  Raw measurements: " << meas_package.raw_measurements_ << endl;
+			cout << "  Raw measurements: " << measurement_pack.raw_measurements_ << endl;
 			cout << "  Inititialized: " << is_initialized_ << endl;
 		}
 
@@ -131,7 +131,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       double roh;
       double theta;
       double roh_dot;
-      meas_package.raw_measurements_ >> roh, theta, roh_dot;
+      measurement_pack.raw_measurements_ >> roh, theta, roh_dot;
 			
   	  // coordinate convertion from polar to cartesian
   	  double px = rho * cos(phi);
@@ -157,7 +157,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 			// collect initial state values
 			double px;
 			double py;
-			meas_package.raw_measurements_ >> px, py;
+			measurement_pack.raw_measurements_ >> px, py;
 			double vx = 0;
 			double vy = 0;
 			
@@ -233,14 +233,14 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 		Tools tools;
 		ekf_.H_ = tools.CalculateJacobian(ekf_.x_);
 		ekf_.R_ = R_radar_;
-		ekf_.UpdateEKF(meas_package.raw_measurements_);
+		ekf_.UpdateEKF(measurement_pack.raw_measurements_);
 	
   } else {
     // Laser updates
 	
 		ekf_.H_ = H_laser_;
 		ekf_.R_ = R_laser_;
-		ekf_.Update(meas_package.raw_measurements_);
+		ekf_.Update(measurement_pack.raw_measurements_);
 	
   }
 	
