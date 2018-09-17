@@ -109,7 +109,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     */
 		
 		// display message if required
-		if bDISPLAY {
+		if (bDISPLAY) {
 			cout << "EKF: ProcessMeasurement - Start" << endl;
 			cout << "  Time stamp: " << measurement_pack.timestamp_ << endl;
 			cout << "  Sensor type: " << measurement_pack.sensor_type_ << endl;
@@ -169,7 +169,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 		// done initializing, no need to predict or update
     is_initialized_ = true;
 		
-		if bDISPLAY {
+		if (bDISPLAY) {
 			cout << "  Inititialized: " << is_initialized_ << endl;
 			cout << "  EKF state x: " << ekf_.x_ << endl;
 			cout << "  EKF error noise P: " << ekf_.P_ << endl;
@@ -248,7 +248,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	previous_timestamp_ = current_timestamp;
 	
   // print the output
-	if bDISPLAY {
+	if (bDISPLAY) {
 		cout << "  Delta time: " << dt << endl;
 		cout << "  EKF model F: " << ekf_.F_ << endl;
 		cout << "  EKF process noise Q: " << ekf_.Q_ << endl;
