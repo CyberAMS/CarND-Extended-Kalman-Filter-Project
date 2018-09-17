@@ -5,7 +5,7 @@
 
 class MeasurementPackage {
 	
-	public:
+public:
 	
   long long timestamp_;
 

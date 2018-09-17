@@ -7,7 +7,7 @@ using Eigen::VectorXd;
 
 class KalmanFilter {
 	
-	public:
+public:
 
   // state vector
   VectorXd x_;
@@ -69,7 +69,7 @@ class KalmanFilter {
    */
   void UpdateEKF(const Eigen::VectorXd &z);
 
-	private:
+private:
 	
 	// define matrics
 	MatrixXd Ft;

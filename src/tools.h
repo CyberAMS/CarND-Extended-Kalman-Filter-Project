@@ -9,7 +9,7 @@ using namespace std;
 
 class Tools {
 	
-	public:
+public:
 	
   /**
   * Constructor.
@@ -31,7 +31,7 @@ class Tools {
   */
   MatrixXd CalculateJacobian(const VectorXd& x_state);
 	
-	private:
+private:
 	
 	// define matrices
 	VectorXd rmse;

@@ -14,7 +14,7 @@ using Eigen::VectorXd;
 
 class FusionEKF {
 	
-	public:
+public:
 	
   /**
   * Constructor.
@@ -36,7 +36,7 @@ class FusionEKF {
   */
   KalmanFilter ekf_;
 
-	private:
+private:
 	
   // check whether the tracking toolbox was initialized or not (first measurement)
   bool is_initialized_;
