@@ -2,27 +2,30 @@
 #define KALMAN_FILTER_H_
 #include "Eigen/Dense"
 
+using Eigen::MatrixXd;
+using Eigen::VectorXd;
+
 class KalmanFilter {
 	
 	public:
 
   // state vector
-  Eigen::VectorXd x_;
+  VectorXd x_;
 
   // state covariance matrix
-  Eigen::MatrixXd P_;
+  MatrixXd P_;
 
   // state transition matrix
-  Eigen::MatrixXd F_;
+  MatrixXd F_;
 
   // process covariance matrix
-  Eigen::MatrixXd Q_;
+  MatrixXd Q_;
 
   // measurement matrix
-  Eigen::MatrixXd H_;
+  MatrixXd H_;
 
   // measurement covariance matrix
-  Eigen::MatrixXd R_;
+  MatrixXd R_;
 
   /**
    * Constructor

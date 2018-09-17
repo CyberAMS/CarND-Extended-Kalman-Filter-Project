@@ -9,6 +9,9 @@
 #include "kalman_filter.h"
 #include "tools.h"
 
+using Eigen::MatrixXd;
+using Eigen::VectorXd;
+
 class FusionEKF {
 	
 	public:
@@ -45,14 +48,14 @@ class FusionEKF {
   Tools tools;
 	
 	// define matrices
-  Eigen::MatrixXd R_laser_;
-  Eigen::MatrixXd R_radar_;
-  Eigen::MatrixXd H_laser_;
-  Eigen::MatrixXd Hj_;
-	Eigen::VectorXd x_init;
-	Eigen::MatrixXd P_init;
-	Eigen::MatrixXd F_init;
-	Eigen::MatrixXd Q_init;
+  MatrixXd R_laser_;
+  MatrixXd R_radar_;
+  MatrixXd H_laser_;
+  MatrixXd Hj_;
+	VectorXd x_init;
+	MatrixXd P_init;
+	MatrixXd F_init;
+	MatrixXd Q_init;
 
 	// define polar coordinates
   double rho;
