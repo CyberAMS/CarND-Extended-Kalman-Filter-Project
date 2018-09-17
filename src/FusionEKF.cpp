@@ -128,10 +128,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 			*/
 			
 			// collect initial state values
-      double roh;
+      double rho;
       double theta;
-      double roh_dot;
-      measurement_pack.raw_measurements_ >> roh, theta, roh_dot;
+      double rho_dot;
+      measurement_pack.raw_measurements_ >> rho, theta, rho_dot;
 			
   	  // coordinate convertion from polar to cartesian
   	  double px = rho * cos(phi);
