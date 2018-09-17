@@ -33,8 +33,32 @@ class Tools {
 	
 	private:
 	
+	// define matrices
+	VectorXd rmse;
+	VectorXd residual;
+	MatrixXd Hj;
+	
+	// define cartesian coordinates
+  double px;
+  double py;
+  double vx;
+  double vy;
+	
+	// define helper terms
+  double c1;
+  double c2;
+  double c3;
+
 	// boolean for display debug messages
 	const bool bDISPLAY = true;
+	
+	// define constants
+	const int NUM_MEASUREMENTS = 3;
+	const int NUM_STATES = 4;
+	const int ZERO_DETECTION = 0.0001;	
+
+	// define variables
+	unsigned int vCount;
 	
 };
 

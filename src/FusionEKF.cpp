@@ -13,13 +13,6 @@ using std::vector;
  */
 FusionEKF::FusionEKF() {
 	
-	// define constants
-	const bool bDISPLAY = true;
-	const int NUM_LASER_MEASUREMENTS = 2;
-	const int NUM_RADAR_MEASUREMENTS = 3;
-	const int NUM_STATES = 4;
-	const int NUM_OBSERVABLE_STATES = 2;
-
 	is_initialized_ = false;
 
 	previous_timestamp_ = 0;
@@ -91,11 +84,6 @@ FusionEKF::~FusionEKF() {}
 
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	
-	// define constants
-	const int ZERO_DETECTION = 0.0001;
-  const double NOISE_AX = 9.0;
-	const double NOISE_AY = 9.0;
-	
   /*****************************************************************************
    *  Initialization
    ****************************************************************************/
@@ -128,22 +116,19 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 			*/
 			
 			// collect initial state values
-      double rho;
-      double theta;
-      double rho_dot;
       measurement_pack.raw_measurements_ >> rho, theta, rho_dot;
 			
   	  // coordinate convertion from polar to cartesian
-  	  double px = rho * cos(theta);
+  	  px = rho * cos(theta);
       if (fabs(px) < ZERO_DETECTION) {
         px = ((px > 0) - (px < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
       }
-  	  double py = rho * sin(theta);
+  	  py = rho * sin(theta);
       if (fabs(py) < ZERO_DETECTION) {
         py = ((py > 0) - (py < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
       }
-  	  double vx = rho_dot * cos(theta);
-			double vy = rho_dot * sin(theta);
+  	  vx = rho_dot * cos(theta);
+			vy = rho_dot * sin(theta);
 			
 			// assign values to initial state vector
 			ekf_.x_ << px, py, vx, vy;	  
@@ -155,11 +140,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       */
 	  
 			// collect initial state values
-			double px;
-			double py;
 			measurement_pack.raw_measurements_ >> px, py;
-			double vx = 0;
-			double vy = 0;
+			vx = 0;
+			vy = 0;
 			
 			// assign values to initial state vector
 			ekf_.x_ << px, py, vx, vy;
@@ -185,7 +168,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    ****************************************************************************/
 	
 	// get current time stamp	
-	long long current_timestamp = measurement_pack.timestamp_;
+	current_timestamp = measurement_pack.timestamp_;
 	
   /**
   TODO:
@@ -195,10 +178,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
   */
 	
-  double dt = (current_timestamp - previous_timestamp_) / 1000.0 / 1000.0;
-  double dt_2 = dt * dt;
-  double dt_3 = dt_2 * dt;
-  double dt_4 = dt_3 * dt;
+  dt = (current_timestamp - previous_timestamp_) / 1000.0 / 1000.0;
+  dt_2 = dt * dt;
+  dt_3 = dt_2 * dt;
+  dt_4 = dt_3 * dt;
 	
 	// update the state transition matrix
 	ekf_.F_(1, 3) = dt;
@@ -230,7 +213,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
     // Radar updates
 	
-		Tools tools;
 		ekf_.H_ = tools.CalculateJacobian(ekf_.x_);
 		ekf_.R_ = R_radar_;
 		ekf_.UpdateEKF(measurement_pack.raw_measurements_);

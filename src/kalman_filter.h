@@ -68,9 +68,36 @@ class KalmanFilter {
 
 	private:
 	
-	// boolean for display debug messages
-	const bool bDISPLAY;
+	// define matrics
+	MatrixXd Ft;
+	VectorXd y;
+	VectorXd hx;
+	MatrixXd I;
+	MatrixXd Ht;
+	MatrixXd S;
+	MatrixXd Si;
+	MatrixXd K;
+	
+	// define polar coordinates
+  double rho;
+  double theta;
+  double rho_dot;
+	
+	// define cartesian coordinates
+  double px;
+  double py;
+  double vx;
+  double vy;
 
+	// boolean for display debug messages
+	const bool bDISPLAY = true;
+
+	// define constants
+	const int NUM_LASER_MEASUREMENTS = 2;
+	const int NUM_RADAR_MEASUREMENTS = 3;
+	const int NUM_STATES = 4;
+	const int ZERO_DETECTION = 0.0001;
+	
 };
 
 #endif /* KALMAN_FILTER_H_ */

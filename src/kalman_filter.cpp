@@ -8,12 +8,7 @@ using Eigen::VectorXd;
 // Please note that the Eigen library does not initialize 
 // VectorXd or MatrixXd objects with zeros upon creation.
 
-KalmanFilter::KalmanFilter() {
-	
-	// define constants
-	const bool bDISPLAY = true;
-	
-}
+KalmanFilter::KalmanFilter() {}
 
 KalmanFilter::~KalmanFilter() {}
 
@@ -48,7 +43,7 @@ void KalmanFilter::Predict() {
 	x_ = F_ * x_;
 	
 	// predict noise
-	MatrixXd Ft = F_.transpose();
+	Ft = F_.transpose();
 	P_ = (F_ * P_ * Ft) + Q_;
 	
 	// display message if required
@@ -76,7 +71,8 @@ void KalmanFilter::Update(const VectorXd &z) {
 	}
 	
 	// calculate y
-	VectorXd y = z - H_ * x_;
+	y = VectorXd(NUM_LASER_MEASUREMENTS);
+	y = z - H_ * x_;
 
 	// call function to update with this y value
 	UpdateWithY(y);
@@ -95,10 +91,6 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 		* update the state by using Extended Kalman Filter equations
 	*/
 	
-	// define constants
-	const int NUM_RADAR_MEASUREMENTS = 3;
-	const int ZERO_DETECTION = 0.0001;
-
 	// display message if required
 	if (bDISPLAY) {
 		cout << "KALMAN: UpdateEKF - Start" << endl;
@@ -107,31 +99,28 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	}
 
 	// get cartesian state variables
-  float px;
-  float py;
-  float vx;
-  float vy;
 	x_ >> px, py, vx, vy;
 	
 	// calculate polar state variables
-  float rho = sqrt((px * px) + (py * py));
+  rho = sqrt((px * px) + (py * py));
   if (fabs(rho) < ZERO_DETECTION) {
 		rho = ((rho > 0) - (rho < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
 	}
-  float theta = atan2(py, px);
-  float rho_dot = ((px * vx) + (py * vy)) / rho;
+  theta = atan2(py, px);
+  rho_dot = ((px * vx) + (py * vy)) / rho;
 	
 	// calculate h
-  VectorXd h = VectorXd(NUM_RADAR_MEASUREMENTS);
+  hx = VectorXd(NUM_RADAR_MEASUREMENTS);
   hx << rho, theta, rho_dot;
 
 	// calculate y
-	VectorXd y = z - hx;
+	y = VectorXd(NUM_RADAR_MEASUREMENTS);
+	y = z - hx;
   while (y(1) > PI || y(1) < -PI ) {
     if (y(1) > PI) {
       y(1) -= PI;
     } else {
-      y(1) += M_PI;
+      y(1) += PI;
     }
 	}
 	
@@ -149,9 +138,6 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 
 void KalmanFilter::UpdateWithY(const VectorXd &y){
 	
-	// define constants
-	const int NUM_STATES = 4;
-
 	// display message if required
 	if (bDISPLAY) {
 		cout << "KALMAN: UpdateWithY - Start" << endl;
@@ -162,13 +148,13 @@ void KalmanFilter::UpdateWithY(const VectorXd &y){
 	}
 
 	// calculate identity matrix
-	MatrixXd I = MatrixXd::Identity(NUM_STATES, NUM_STATES);
+	I = MatrixXd::Identity(NUM_STATES, NUM_STATES);
 	
 	// calculate matrices
-	MatrixXd Ht = H_.transpose();
-	MatrixXd S = H_ * P_ * Ht + R_;
-	MatrixXd Si = S.inverse();
-	MatrixXd K =  P_ * Ht * Si;
+	Ht = H_.transpose();
+	S = H_ * P_ * Ht + R_;
+	Si = S.inverse();
+	K =  P_ * Ht * Si;
 
 	// new state and noise
 	x_ = x_ + (K * y);

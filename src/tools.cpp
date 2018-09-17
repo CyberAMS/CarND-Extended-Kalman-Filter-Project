@@ -5,12 +5,7 @@ using Eigen::VectorXd;
 using Eigen::MatrixXd;
 using std::vector;
 
-Tools::Tools() {
-	
-	// define constants
-	// const bool bDISPLAY = true;
-	
-}
+Tools::Tools() {}
 
 Tools::~Tools() {}
 
@@ -21,9 +16,6 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 		* Calculate the RMSE here.
 	*/
 	
-	// define constants
-	const int NUM_STATES = 4;
-	
 	// display message if required	
 	if (bDISPLAY) {
 		cout << "Tools: CalculateRMSE - Start" << endl;
@@ -32,7 +24,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 	}
 
 	// initialize output
-	VectorXd rmse(NUM_STATES);
+	rmse = VectorXd(NUM_STATES);
 	rmse << 0, 0, 0, 0;
 
 	// check the validity of the following inputs:
@@ -47,9 +39,9 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 	}
 
 	// accumulate squared residuals
-	for(unsigned int i = 0; i < estimations.size(); ++i){
+	for(vCount = 0; vCount < estimations.size(); ++vCount){
 
-		VectorXd residual = estimations[i] - ground_truth[i];
+		residual = estimations[vCount] - ground_truth[vCount];
 
 		// coefficient-wise multiplication
 		residual = residual.array() * residual.array();
@@ -80,11 +72,6 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 		* Calculate a Jacobian here.
 	*/
 
-	// define constants
-	const int NUM_MEASUREMENTS = 3;
-	const int NUM_STATES = 4;
-	const int ZERO_DETECTION = 0.0001;
-
 	// display message if required	
 	if (bDISPLAY) {
 		cout << "Tools: CalculateJacobian - Start" << endl;
@@ -92,23 +79,24 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	}
 
 	// initialize output
-	MatrixXd Hj(NUM_MEASUREMENTS, NUM_STATES);
+	Hj = MatrixXd(NUM_MEASUREMENTS, NUM_STATES);
 	Hj << 0, 0, 0, 0,
 	      0, 0, 0, 0,
 		    0, 0, 0, 0;
 	
 	// recover state parameters
-	float px = x_state(0);
-	float py = x_state(1);
-	float vx = x_state(2);
-	float vy = x_state(3);
+	px = x_state(0);
+	py = x_state(1);
+	vx = x_state(2);
+	vy = x_state(3);
 
 	// pre-compute a set of terms to avoid repeated calculation
-	float c1 = ((px * px) + (py * py));
+	c1 = ((px * px) + (py * py));
   if (fabs(c1) < ZERO_DETECTION) {
 		c1 = ((c1 > 0) - (c1 < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
-	}	float c2 = sqrt(c1);
-	float c3 = (c1 * c2);
+	}
+	c2 = sqrt(c1);
+	c3 = (c1 * c2);
 
 	//compute the Jacobian matrix
 	Hj <<  (px / c2), (py / c2), 0, 0,
