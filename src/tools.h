@@ -34,7 +34,7 @@ class Tools {
 	private:
 	
 	// boolean for display debug messages
-	const bool bDISPLAY;
+	const bool bDISPLAY = true;
 	
 };
 
