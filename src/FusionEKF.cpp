@@ -116,9 +116,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 			*/
 			
 			// collect initial state values
-      rho = measurement_pack.raw_measurements_(0);
-			theta = measurement_pack.raw_measurements_(1);
-			rho_dot = measurement_pack.raw_measurements_(2);
+      rho = measurement_pack.raw_measurements_[0];
+			theta = measurement_pack.raw_measurements_[1];
+			rho_dot = measurement_pack.raw_measurements_[2];
 			
   	  // coordinate convertion from polar to cartesian
   	  px = rho * cos(theta);
@@ -139,8 +139,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       */
 	  
 			// collect initial state values
-			px = measurement_pack.raw_measurements_(0);
-			py = measurement_pack.raw_measurements_(1);
+			px = measurement_pack.raw_measurements_[0];
+			py = measurement_pack.raw_measurements_[1];
 			vx = 0;
 			vy = 0;
 			
