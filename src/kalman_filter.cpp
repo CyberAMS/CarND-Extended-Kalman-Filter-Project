@@ -8,7 +8,16 @@ using Eigen::VectorXd;
 // Please note that the Eigen library does not initialize 
 // VectorXd or MatrixXd objects with zeros upon creation.
 
-KalmanFilter::KalmanFilter() {}
+KalmanFilter::KalmanFilter() {
+	
+	// initialize matrices
+	y_laser = VectorXd(NUM_LASER_MEASUREMENTS);
+	y_laser << 1, 1;
+	y_radar = VectorXd(NUM_RADAR_MEASUREMENTS);	
+	y_radar << 1, 1;
+  hx = VectorXd(NUM_RADAR_MEASUREMENTS);
+  hx << 1, 1, 1;
+}
 
 KalmanFilter::~KalmanFilter() {}
 
@@ -71,15 +80,14 @@ void KalmanFilter::Update(const VectorXd &z) {
 	}
 	
 	// calculate y
-	y = VectorXd(NUM_LASER_MEASUREMENTS);
-	y = z - H_ * x_;
+	y_laser = z - H_ * x_;
 
-	// call function to update with this y value
-	UpdateWithY(y);
+	// call function to update with this y_laser value
+	UpdateWithY(y_laser);
 	
 	// display message if required
 	if (bDISPLAY) {
-		cout << "  Measurement post fit y: " << y << endl;
+		cout << "  Measurement post fit y: " << y_laser << endl;
 		cout << "--- KALMAN: Update - End" << endl;
 	}
 	
@@ -99,7 +107,10 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	}
 
 	// get cartesian state variables
-	x_ >> px, py, vx, vy;
+	px = x_(0);
+	py = x_(1);
+	vx = x_(2);
+	vy = x_(3);
 	
 	// calculate polar state variables
   rho = sqrt((px * px) + (py * py));
@@ -110,27 +121,27 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   rho_dot = ((px * vx) + (py * vy)) / rho;
 	
 	// calculate h
-  hx = VectorXd(NUM_RADAR_MEASUREMENTS);
-  hx << rho, theta, rho_dot;
+  hx(0) = rho;
+	hx(1) = theta;
+	hx(2) = rho_dot;
 
 	// calculate y
-	y = VectorXd(NUM_RADAR_MEASUREMENTS);
-	y = z - hx;
-  while (y(1) > PI || y(1) < -PI ) {
-    if (y(1) > PI) {
-      y(1) -= PI;
+	y_radar = z - hx;
+  while (y_radar(1) > PI || y_radar(1) < -PI ) {
+    if (y_radar(1) > PI) {
+      y_radar(1) -= PI;
     } else {
-      y(1) += PI;
+      y_radar(1) += PI;
     }
 	}
 	
-	// call function to update with this y value
-	UpdateWithY(y);
+	// call function to update with this y_radar value
+	UpdateWithY(y_radar);
 	
 	// display message if required
 	if (bDISPLAY) {
 		cout << "  Measurement function hx (roh, theta, rho_dot): " << hx << endl;
-		cout << "  Measurement post fit y: " << y << endl;
+		cout << "  Measurement post fit y: " << y_radar << endl;
 		cout << "--- KALMAN: UpdateEKF - End" << endl;
 	}
 	

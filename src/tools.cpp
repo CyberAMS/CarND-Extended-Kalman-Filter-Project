@@ -5,7 +5,17 @@ using Eigen::VectorXd;
 using Eigen::MatrixXd;
 using std::vector;
 
-Tools::Tools() {}
+Tools::Tools() {
+	
+	// initialize matrices
+	rmse = VectorXd(NUM_STATES);
+	rmse << 1, 1, 1, 1;
+	Hj = MatrixXd(NUM_MEASUREMENTS, NUM_STATES);
+	Hj << 1, 1, 0, 0,
+	      1, 1, 0, 0,
+		    1, 1, 1, 1;
+	
+}
 
 Tools::~Tools() {}
 
@@ -16,16 +26,18 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 		* Calculate the RMSE here.
 	*/
 	
+	// initialize output
+	rmse(0) = 0;
+	rmse(1) = 0;
+	rmse(2) = 0;
+	rmse(3) = 0;
+	
 	// display message if required	
 	if (bDISPLAY) {
 		cout << "Tools: CalculateRMSE - Start" << endl;
-		// cout << "  Estimations: " << estimations << endl; // produces error message
-		// cout << "  Ground truth: " << ground_truth << endl; // produces error message
+		cout << "  Estimations: " << estimations << endl; // produces error message
+		cout << "  Ground truth: " << ground_truth << endl; // produces error message
 	}
-
-	// initialize output
-	rmse = VectorXd(NUM_STATES);
-	rmse << 0, 0, 0, 0;
 
 	// check the validity of the following inputs:
 	//  * the estimation vector size should not be zero
@@ -78,12 +90,6 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 		cout << "  State x (px, py, vx, vy): " << x_state << endl;
 	}
 
-	// initialize output
-	Hj = MatrixXd(NUM_MEASUREMENTS, NUM_STATES);
-	Hj << 0, 0, 0, 0,
-	      0, 0, 0, 0,
-		    0, 0, 0, 0;
-	
 	// recover state parameters
 	px = x_state(0);
 	py = x_state(1);
@@ -99,9 +105,14 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	c3 = (c1 * c2);
 
 	//compute the Jacobian matrix
-	Hj <<  (px / c2), (py / c2), 0, 0,
-		    -(py / c1), (px / c1), 0, 0,
-		    ((py * ((vx * py) - (vy * px))) / c3), ((px * ((px * vy) - (py * vx))) / c3), (px / c2), (py / c2);
+	Hj(0, 0) = (px / c2);
+	Hj(0, 1) = (py / c2);
+	Hj(1, 0) = -(py / c1);
+	Hj(1, 1) = (px / c1);
+	Hj(2, 0) = ((py * ((vx * py) - (vy * px))) / c3);
+	Hj(2, 1) = ((px * ((px * vy) - (py * vx))) / c3);
+	Hj(2, 2) = (px / c2);
+	Hj(2, 3) = (py / c2);
 
 	// display message if required	
 	if (bDISPLAY) {

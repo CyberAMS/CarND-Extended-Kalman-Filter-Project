@@ -73,7 +73,8 @@ private:
 	
 	// define matrics
 	MatrixXd Ft;
-	VectorXd y;
+	VectorXd y_laser;
+	VectorXd y_radar;
 	VectorXd hx;
 	MatrixXd I;
 	MatrixXd Ht;

@@ -116,7 +116,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 			*/
 			
 			// collect initial state values
-      measurement_pack.raw_measurements_ >> rho, theta, rho_dot;
+      rho = measurement_pack.raw_measurements_(0);
+			theta = measurement_pack.raw_measurements_(1);
+			rho_dot = measurement_pack.raw_measurements_(2);
 			
   	  // coordinate convertion from polar to cartesian
   	  px = rho * cos(theta);
@@ -130,9 +132,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   	  vx = rho_dot * cos(theta);
 			vy = rho_dot * sin(theta);
 			
-			// assign values to initial state vector
-			ekf_.x_ << px, py, vx, vy;	  
-	  
     } else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
 			
       /**
@@ -140,14 +139,30 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       */
 	  
 			// collect initial state values
-			measurement_pack.raw_measurements_ >> px, py;
+			px = measurement_pack.raw_measurements_(0);
+			py = measurement_pack.raw_measurements_(1);
 			vx = 0;
 			vy = 0;
 			
-			// assign values to initial state vector
-			ekf_.x_ << px, py, vx, vy;
+    }  else {
+			
+      /**
+      No valid measurements.
+      */
 	  
+			// collect initial state values
+			px = 0;
+			py = 0;
+			vx = 0;
+			vy = 0;
+			
     }
+		
+		// assign values to initial state vector
+		ekf_.x_(0) = px;
+		ekf_.x_(1) = py;
+		ekf_.x_(2) = vx;
+		ekf_.x_(3) = vy;
 		
 		// done initializing, no need to predict or update
     is_initialized_ = true;
