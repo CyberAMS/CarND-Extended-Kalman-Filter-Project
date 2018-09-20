@@ -2,6 +2,7 @@
 
 #define PI acos(-1.0)
 
+using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 

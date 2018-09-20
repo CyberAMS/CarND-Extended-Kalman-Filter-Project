@@ -1,6 +1,7 @@
 #include <iostream>
 #include "tools.h"
 
+using namespace std;
 using Eigen::VectorXd;
 using Eigen::MatrixXd;
 using std::vector;
@@ -35,8 +36,8 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 	// display message if required	
 	if (bDISPLAY) {
 		cout << "Tools: CalculateRMSE - Start" << endl;
-		//cout << "  Estimations: " << estimations << endl; // produces error message
-		//cout << "  Ground truth: " << ground_truth << endl; // produces error message
+		cout << "  Estimations: " << estimations << endl; // produces error message
+		cout << "  Ground truth: " << ground_truth << endl; // produces error message
 	}
 
 	// check the validity of the following inputs:
