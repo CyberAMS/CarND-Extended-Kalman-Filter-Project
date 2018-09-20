@@ -23,11 +23,11 @@ FusionEKF::FusionEKF() {
 	H_laser_ = MatrixXd(NUM_OBSERVABLE_STATES, NUM_STATES);
 	Hj_ = MatrixXd(NUM_RADAR_MEASUREMENTS, NUM_STATES);
 
-	// measurement covariance matrix - laser
+	// measurement covariance matrix - laser (actual values)
 	R_laser_ << 0.0225,      0,
                    0, 0.0225;
 
-	// measurement covariance matrix - radar
+	// measurement covariance matrix - radar (actual values)
 	R_radar_ << 0.09,      0,    0,
                  0, 0.0009,    0,
                  0,      0, 0.09;
@@ -38,34 +38,34 @@ FusionEKF::FusionEKF() {
 		* Set the process and measurement noises
 	*/
 	
-	// measurement matrix
+	// measurement matrix (actual values)
 	H_laser_ << 1, 0, 0, 0,
 						  0, 1, 0, 0;
 			   
-	// Jacobian for measurement noise template
+	// Jacobian for measurement noise template (template)
 	Hj_ << 1, 1, 0, 0,
 	       1, 1, 0, 0,
 		     1, 1, 1, 1;
 	
-	// state vector template
+	// state vector (template)
 	x_init = VectorXd(NUM_STATES);
 	x_init << 1, 1, 1, 1;
 	
-	// initial error covariance matrix
+	// initial error covariance matrix (actual values)
 	P_init = MatrixXd(NUM_STATES, NUM_STATES);
 	P_init << 1, 0,    0,    0, // measurement for position available at the beginning
 						0, 1,    0,    0, // measurement for position available at the beginning
 						0, 0, 1000,    0, // very uncertain velocity at the beginning
 						0, 0,    0, 1000; // very uncertain velocity at the beginning
 	
-	// state-transition matrix template
+	// state-transition matrix (template)
 	F_init = MatrixXd(NUM_STATES, NUM_STATES);
 	F_init << 1, 0, 1, 0,
 						0, 1, 0, 1,
 						0, 0, 1, 0,
 						0, 0, 0, 1;
 						
-	// process noise covariance matrix template
+	// process noise covariance matrix (template)
 	Q_init = MatrixXd(NUM_STATES, NUM_STATES);
 	Q_init << 1, 0, 1, 0,
 						0, 1, 0, 1,
@@ -105,9 +105,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 			cout << "  Inititialized: " << is_initialized_ << endl;
 		}
 
-		// first measurement
-    ekf_.x_ = VectorXd(4);
-    ekf_.x_ << 1, 1, 1, 1;
+		// first measurement => not necessary
+    // ekf_.x_ = VectorXd(4);
+    // ekf_.x_ << 1, 1, 1, 1;
 
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
 			
