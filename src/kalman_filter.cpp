@@ -131,12 +131,12 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   if (fabs(rho) < ZERO_DETECTION) {
 		rho = ((rho > 0) - (rho < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
 	}
-  theta = atan2(py, px);
+  phi = atan2(py, px);
   rho_dot = ((px * vx) + (py * vy)) / rho;
 	
 	// calculate h
   hx(0) = rho;
-	hx(1) = theta;
+	hx(1) = phi;
 	hx(2) = rho_dot;
 
 	// calculate y
@@ -154,7 +154,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	
 	// display message if required
 	if (bDISPLAY) {
-		cout << "  Measurement function hx (roh, theta, rho_dot): " << endl << hx << endl;
+		cout << "  Measurement function hx (roh, phi, rho_dot): " << endl << hx << endl;
 		cout << "  Measurement post fit y: " << endl << y_radar << endl;
 		cout << "--- KALMAN: UpdateEKF - End" << endl;
 		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;

@@ -93,7 +93,7 @@ private:
 	
 	// define polar coordinates
   double rho;
-  double theta;
+  double phi;
   double rho_dot;
 	
 	// define cartesian coordinates
