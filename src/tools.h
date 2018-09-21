@@ -3,9 +3,10 @@
 #include <vector>
 #include "Eigen/Dense"
 
+using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
-using namespace std;
+using std::vector;
 
 class Tools {
 	

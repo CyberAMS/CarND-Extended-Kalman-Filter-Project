@@ -2,8 +2,10 @@
 #define KALMAN_FILTER_H_
 #include "Eigen/Dense"
 
+using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
+using std::vector;
 
 class KalmanFilter {
 	
@@ -102,6 +104,12 @@ private:
 	const int NUM_STATES = 4;
 	const int ZERO_DETECTION = 0.0001;
 	
+  /**
+   * Updates the state using y
+   * @param y The measurement post fit
+   */
+  void KalmanFilter::UpdateWithY(const VectorXd &y);
+
 };
 
 #endif /* KALMAN_FILTER_H_ */
