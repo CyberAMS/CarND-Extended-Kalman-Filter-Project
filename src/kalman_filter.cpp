@@ -23,7 +23,7 @@ KalmanFilter::KalmanFilter() {
 	y_laser = VectorXd(NUM_LASER_MEASUREMENTS);
 	y_laser << 1, 1;
 	y_radar = VectorXd(NUM_RADAR_MEASUREMENTS);	
-	y_radar << 1, 1;
+	y_radar << 1, 1, 1;
   hx = VectorXd(NUM_RADAR_MEASUREMENTS);
   hx << 1, 1, 1;
 }

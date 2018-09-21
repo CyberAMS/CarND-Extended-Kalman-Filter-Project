@@ -59,7 +59,7 @@ private:
 	const bool bDISPLAY = true;
 	
 	// define constants
-	const int NUM_MEASUREMENTS = 3;
+	const int NUM_RADAR_MEASUREMENTS = 3;
 	const int NUM_STATES = 4;
 	const int ZERO_DETECTION = 0.0001;	
 

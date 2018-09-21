@@ -16,7 +16,7 @@ Tools::Tools() {
 	// initialize matrices
 	rmse = VectorXd(NUM_STATES);
 	rmse << 1, 1, 1, 1;
-	Hj = MatrixXd(NUM_MEASUREMENTS, NUM_STATES);
+	Hj = MatrixXd(NUM_RADAR_MEASUREMENTS, NUM_STATES);
 	Hj << 1, 1, 0, 0,
 	      1, 1, 0, 0,
 		    1, 1, 1, 1;
