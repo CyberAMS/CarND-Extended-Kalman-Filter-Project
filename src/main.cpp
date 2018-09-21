@@ -41,7 +41,6 @@ int main() {
 	
 	// redirect standard output to filebuf
 	ofstream out("out.txt");
-  auto *coutbuf = cout.rdbuf();
   cout.rdbuf(out.rdbuf());
 	
   uWS::Hub h;
