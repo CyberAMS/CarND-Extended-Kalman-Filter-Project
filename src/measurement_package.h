@@ -1,6 +1,10 @@
 #ifndef MEASUREMENT_PACKAGE_H_
 #define MEASUREMENT_PACKAGE_H_
 
+#include <vector>
+#include <string>
+#include <fstream>
+#include <iostream>
 #include "Eigen/Dense"
 
 class MeasurementPackage {

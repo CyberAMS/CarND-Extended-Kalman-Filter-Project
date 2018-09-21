@@ -1,6 +1,13 @@
 #ifndef KALMAN_FILTER_H_
 #define KALMAN_FILTER_H_
+
+#include <vector>
+#include <string>
+#include <fstream>
+#include <iostream>
 #include "Eigen/Dense"
+#include "tools.h"
+#include "measurement_package.h"
 
 using namespace std;
 using Eigen::MatrixXd;

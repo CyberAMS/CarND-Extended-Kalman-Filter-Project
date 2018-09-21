@@ -1,7 +1,12 @@
 #ifndef TOOLS_H_
 #define TOOLS_H_
+
 #include <vector>
+#include <string>
+#include <fstream>
+#include <iostream>
 #include "Eigen/Dense"
+#include "measurement_package.h"
 
 using namespace std;
 using Eigen::MatrixXd;

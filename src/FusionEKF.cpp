@@ -1,7 +1,12 @@
-#include "FusionEKF.h"
-#include "tools.h"
-#include "Eigen/Dense"
+#include <vector>
+#include <string>
+#include <fstream>
 #include <iostream>
+#include "Eigen/Dense"
+#include "FusionEKF.h"
+#include "kalman_filter.h"
+#include "tools.h"
+#include "measurement_package.h"
 
 using namespace std;
 using Eigen::MatrixXd;

@@ -1,4 +1,11 @@
+#include <vector>
+#include <string>
+#include <fstream>
+#include <iostream>
+#include "Eigen/Dense"
 #include "kalman_filter.h"
+#include "tools.h"
+#include "measurement_package.h"
 
 #define PI acos(-1.0)
 
