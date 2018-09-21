@@ -89,6 +89,15 @@ FusionEKF::~FusionEKF() {}
 
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	
+	// display message if required
+	if (bDISPLAY) {
+		cout << "EKF: ProcessMeasurement - Start" << endl;
+		cout << "  Time stamp: " << measurement_pack.timestamp_ << endl;
+		cout << "  Sensor type: " << measurement_pack.sensor_type_ << endl;
+		cout << "  Raw measurements: " << endl << measurement_pack.raw_measurements_ << endl;
+		cout << "  Inititialized: " << is_initialized_ << endl;
+	}
+
   /*****************************************************************************
    *  Initialization
    ****************************************************************************/
@@ -101,15 +110,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       * Remember: you'll need to convert radar from polar to cartesian coordinates.
     */
 		
-		// display message if required
-		if (bDISPLAY) {
-			cout << "EKF: ProcessMeasurement - Start" << endl;
-			cout << "  Time stamp: " << measurement_pack.timestamp_ << endl;
-			cout << "  Sensor type: " << measurement_pack.sensor_type_ << endl;
-			cout << "  Raw measurements: " << endl << measurement_pack.raw_measurements_ << endl;
-			cout << "  Inititialized: " << is_initialized_ << endl;
-		}
-
 		// first measurement => not necessary
     // ekf_.x_ = VectorXd(4);
     // ekf_.x_ << 1, 1, 1, 1;

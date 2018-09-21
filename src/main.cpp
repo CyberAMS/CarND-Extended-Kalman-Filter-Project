@@ -13,17 +13,17 @@ using json = nlohmann::json;
 // Checks if the SocketIO event has JSON data.
 // If there is data the JSON object in string format will be returned,
 // else the empty string "" will be returned.
-std::string hasData(std::string s) {
+string hasData(string s) {
 	
   auto found_null = s.find("null");
   auto b1 = s.find_first_of("[");
   auto b2 = s.find_first_of("]");
 	
-  if (found_null != std::string::npos) {
+  if (found_null != string::npos) {
 		
     return "";
 		
-  } else if (b1 != std::string::npos && b2 != std::string::npos) {
+  } else if (b1 != string::npos && b2 != string::npos) {
 		
     return s.substr(b1, b2 - b1 + 1);
 		
@@ -55,13 +55,13 @@ int main() {
 
     if (length && length > 2 && data[0] == '4' && data[1] == '2') {
 
-      auto s = hasData(std::string(data));
+      auto s = hasData(string(data));
 			
       if (s != "") {
       	
         auto j = json::parse(s);
 
-        std::string event = j[0].get<std::string>();
+        string event = j[0].get<string>();
         
         if (event == "telemetry") {
           // j[1] is the data JSON object
@@ -71,10 +71,17 @@ int main() {
           MeasurementPackage meas_package;
           istringstream iss(sensor_measurment);
 					long long timestamp;
-
+					
 					// reads first element from the current line
 					string sensor_type;
 					iss >> sensor_type;
+
+					// display message if required
+					if (bDISPLAY) {
+						cout << "Main: onMessage - Start" << endl;
+						cout << "  Time stamp: " << timestamp << endl;
+						cout << "  Sensor type: " << sensor_type << endl;
+					}					
 
 					if (sensor_type.compare("L") == 0) {
 						
@@ -146,16 +153,20 @@ int main() {
           msgJson["rmse_vx"] = RMSE(2);
           msgJson["rmse_vy"] = RMSE(3);
           auto msg = "42[\"estimate_marker\"," + msgJson.dump() + "]";
-					if (bDISPLAY) {
-						std::cout << msg << std::endl;
-					}
+					
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
 	  
+					// display message if required
+					if (bDISPLAY) {
+						cout << "  Message: " << msg << endl;
+						cout << "--- Main: onMessage - End" << endl;
+					}					
+
         }
 				
       } else {
         
-        std::string msg = "42[\"manual\",{}]";
+        string msg = "42[\"manual\",{}]";
         ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
 				
       }
@@ -167,7 +178,7 @@ int main() {
   // doesn't compile :-(
   h.onHttpRequest([](uWS::HttpResponse *res, uWS::HttpRequest req, char *data, size_t, size_t) {
 		
-    const std::string s = "<h1>Hello world!</h1>";
+    const string s = "<h1>Hello world!</h1>";
     if (req.getUrl().valueLength == 1) {
 			
       res->end(s.data(), s.length());
@@ -182,25 +193,25 @@ int main() {
 
   h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) {
 		
-    std::cout << "Connected!!!" << std::endl;
+    cout << "Connected!!!" << endl;
 		
   });
 
   h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, char *message, size_t length) {
 		
     ws.close();
-    std::cout << "Disconnected" << std::endl;
+    cout << "Disconnected" << endl;
 		
   });
 
   int port = 4567;
   if (h.listen(port)) {
 		
-    std::cout << "Listening to port " << port << std::endl;
+    cout << "Listening to port " << port << endl;
 		
   } else {
 		
-    std::cerr << "Failed to listen to port" << std::endl;
+    cerr << "Failed to listen to port" << endl;
 		
     return -1;
 		
