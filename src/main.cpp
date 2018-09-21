@@ -76,13 +76,6 @@ int main() {
 					string sensor_type;
 					iss >> sensor_type;
 
-					// display message if required
-					if (bDISPLAY) {
-						cout << "Main: onMessage - Start" << endl;
-						cout << "  Time stamp: " << timestamp << endl;
-						cout << "  Sensor type: " << sensor_type << endl;
-					}					
-
 					if (sensor_type.compare("L") == 0) {
 						
       	  	meas_package.sensor_type_ = MeasurementPackage::LASER;
@@ -110,6 +103,13 @@ int main() {
           		meas_package.timestamp_ = timestamp;
           }
 					
+					// display message if required
+					if (bDISPLAY) {
+						cout << "Main: onMessage - Start" << endl;
+						cout << "  Time stamp: " << timestamp << endl;
+						cout << "  Sensor type (string): " << sensor_type << endl;
+					}					
+
           double x_gt;
 					double y_gt;
 					double vx_gt;

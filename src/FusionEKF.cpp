@@ -189,8 +189,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	
 	// get current time stamp	
 	current_timestamp = measurement_pack.timestamp_;
-	
-  /**
+
+		/**
   TODO:
     * Update the state transition matrix F according to the new elapsed time.
       - Time is measured in seconds.
@@ -204,18 +204,18 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   dt_4 = dt_3 * dt;
 	
 	// update the state transition matrix
+	ekf_.F_(0, 2) = dt;
 	ekf_.F_(1, 3) = dt;
-	ekf_.F_(2, 4) = dt;
 
 	// update the process noise covariance matrix
-	ekf_.Q_(1, 1) = (dt_4 / 4) * NOISE_AX;
-	ekf_.Q_(1, 3) = (dt_3 / 2) * NOISE_AX;
-	ekf_.Q_(2, 2) = (dt_4 / 4) * NOISE_AY;
-	ekf_.Q_(2, 4) = (dt_3 / 2) * NOISE_AY;
-	ekf_.Q_(3, 1) = (dt_3 / 2) * NOISE_AX;
-	ekf_.Q_(3, 3) = dt_2 * NOISE_AX;
-	ekf_.Q_(4, 2) = (dt_3 / 2) * NOISE_AY;
-	ekf_.Q_(4, 4) = dt_2 * NOISE_AY;
+	ekf_.Q_(0, 0) = (dt_4 / 4) * NOISE_AX;
+	ekf_.Q_(0, 2) = (dt_3 / 2) * NOISE_AX;
+	ekf_.Q_(1, 1) = (dt_4 / 4) * NOISE_AY;
+	ekf_.Q_(1, 3) = (dt_3 / 2) * NOISE_AY;
+	ekf_.Q_(2, 0) = (dt_3 / 2) * NOISE_AX;
+	ekf_.Q_(2, 2) = dt_2 * NOISE_AX;
+	ekf_.Q_(3, 1) = (dt_3 / 2) * NOISE_AY;
+	ekf_.Q_(3, 3) = dt_2 * NOISE_AY;
 	
 	// call prediction step
   ekf_.Predict();
