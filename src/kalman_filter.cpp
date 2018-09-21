@@ -58,7 +58,7 @@ void KalmanFilter::Predict() {
 		cout << "  Process noise Q: " << endl << Q_ << endl;
 	}
 	
-	// predict state
+	// predict state - linear model, i.e. same for LIDAR and RADAR (no need to use Jacobian of F)
 	x_ = F_ * x_;
 	
 	// predict noise
@@ -91,7 +91,7 @@ void KalmanFilter::Update(const VectorXd &z) {
 		cout << "  State x (px, py, vx, vy): " << endl << x_ << endl;
 	}
 	
-	// calculate y
+	// calculate y for LIDAR measurement (linear model, standard KALMAN filter)
 	y_laser = z - H_ * x_;
 
 	// call function to update with this y_laser value
@@ -139,7 +139,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	hx(1) = phi;
 	hx(2) = rho_dot;
 
-	// calculate y
+	// calculate y (non-linear model, extended KALMAN filter)
 	y_radar = z - hx;
   while (y_radar(1) > PI || y_radar(1) < -PI ) {
     if (y_radar(1) > PI) {
