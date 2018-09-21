@@ -57,6 +57,7 @@ private:
 
 	// boolean for display debug messages
 	const bool bDISPLAY = true;
+	const bool bDISPLAYDETAIL = false;
 	
 	// define constants
 	const int NUM_RADAR_MEASUREMENTS = 3;
