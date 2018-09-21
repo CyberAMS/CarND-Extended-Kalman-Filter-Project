@@ -42,7 +42,7 @@ int main() {
 	
 	// define file for redirecting standard output
 	ofstream out("out.txt");
-	auto *coutbuf = cout.rdbuf(); // save screen object
+	streambuf *coutbuf = cout.rdbuf(); // save screen object
 	
   uWS::Hub h;
 	
