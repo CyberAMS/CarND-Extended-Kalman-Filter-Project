@@ -51,10 +51,10 @@ void KalmanFilter::Predict() {
 	// display message if required
 	if (bDISPLAY) {
 		cout << "KALMAN: Predict - Start" << endl;
-		cout << "  Model F: " << F_ << endl;
-		cout << "  State x (px, py, vx, vy): " << x_ << endl;
-		cout << "  Error noise P: " << P_ << endl;
-		cout << "  Process noise Q: " << Q_ << endl;
+		cout << "  Model F: " << endl << F_ << endl;
+		cout << "  State x (px, py, vx, vy): " << endl << x_ << endl;
+		cout << "  Error noise P: " << endl << P_ << endl;
+		cout << "  Process noise Q: " << endl << Q_ << endl;
 	}
 	
 	// predict state
@@ -66,9 +66,9 @@ void KalmanFilter::Predict() {
 	
 	// display message if required
 	if (bDISPLAY) {
-		cout << "  Inverse model Ft: " << Ft << endl;
-		cout << "  New state x (px, py, vx, vy): " << x_ << endl;
-		cout << "  New error noise P: " << P_ << endl;
+		cout << "  Inverse model Ft: " << endl << Ft << endl;
+		cout << "  New state x (px, py, vx, vy): " << endl << x_ << endl;
+		cout << "  New error noise P: " << endl << P_ << endl;
 		cout << "--- KALMAN: Predict - End" << endl;
 	}
 	
@@ -83,9 +83,9 @@ void KalmanFilter::Update(const VectorXd &z) {
 	// display message if required
 	if (bDISPLAY) {
 		cout << "KALMAN: Update - Start" << endl;
-		cout << "  Measurement z: " << z << endl;
-		cout << "  Measurement matrix H: " << H_ << endl;
-		cout << "  State x (px, py, vx, vy): " << x_ << endl;
+		cout << "  Measurement z: " << endl << z << endl;
+		cout << "  Measurement matrix H: " << endl << H_ << endl;
+		cout << "  State x (px, py, vx, vy): " << endl << x_ << endl;
 	}
 	
 	// calculate y
@@ -96,7 +96,7 @@ void KalmanFilter::Update(const VectorXd &z) {
 	
 	// display message if required
 	if (bDISPLAY) {
-		cout << "  Measurement post fit y: " << y_laser << endl;
+		cout << "  Measurement post fit y: " << endl << y_laser << endl;
 		cout << "--- KALMAN: Update - End" << endl;
 	}
 	
@@ -111,8 +111,8 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	// display message if required
 	if (bDISPLAY) {
 		cout << "KALMAN: UpdateEKF - Start" << endl;
-		cout << "  Measurement z: " << z << endl;
-		cout << "  State x (px, py, vx, vy): " << x_ << endl;
+		cout << "  Measurement z: " << endl << z << endl;
+		cout << "  State x (px, py, vx, vy): " << endl << x_ << endl;
 	}
 
 	// get cartesian state variables
@@ -161,10 +161,10 @@ void KalmanFilter::UpdateWithY(const VectorXd &y){
 	// display message if required
 	if (bDISPLAY) {
 		cout << "KALMAN: UpdateWithY - Start" << endl;
-		cout << "  Measurement post fit y: " << y << endl;
-		cout << "  State x (px, py, vx, vy): " << x_ << endl;
-		cout << "  Error noise P: " << P_ << endl;
-		cout << "  Measurement matrix H: " << H_ << endl;
+		cout << "  Measurement post fit y: " << endl << y << endl;
+		cout << "  State x (px, py, vx, vy): " << endl << x_ << endl;
+		cout << "  Error noise P: " << endl << P_ << endl;
+		cout << "  Measurement matrix H: " << endl << H_ << endl;
 	}
 
 	// calculate identity matrix
@@ -182,13 +182,13 @@ void KalmanFilter::UpdateWithY(const VectorXd &y){
 	
 	// display message if required
 	if (bDISPLAY) {
-		cout << "  Identity matrix I: " << I << endl;
-		cout << "  Measurement matrix transposed Ht: " << Ht << endl;
-		cout << "  Innovation covariance matrix S: " << S << endl;
-		cout << "  Innovation covariance matrix inversed Si: " << Si << endl;
-		cout << "  Optimal KALMAN gain matrix K: " << K << endl;
-		cout << "  New state x (px, py, vx, vy): " << x_ << endl;
-		cout << "  New error noise P: " << P_ << endl;
+		cout << "  Identity matrix I: " << endl << I << endl;
+		cout << "  Measurement matrix transposed Ht: " << endl << Ht << endl;
+		cout << "  Innovation covariance matrix S: " << endl << S << endl;
+		cout << "  Innovation covariance matrix inversed Si: " << endl << Si << endl;
+		cout << "  Optimal KALMAN gain matrix K: " << endl << K << endl;
+		cout << "  New state x (px, py, vx, vy): " << endl << x_ << endl;
+		cout << "  New error noise P: " << endl << P_ << endl;
 		cout << "--- KALMAN: UpdateWithY - End" << endl;
 	}
 

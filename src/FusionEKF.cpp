@@ -106,7 +106,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 			cout << "EKF: ProcessMeasurement - Start" << endl;
 			cout << "  Time stamp: " << measurement_pack.timestamp_ << endl;
 			cout << "  Sensor type: " << measurement_pack.sensor_type_ << endl;
-			cout << "  Raw measurements: " << measurement_pack.raw_measurements_ << endl;
+			cout << "  Raw measurements: " << endl << measurement_pack.raw_measurements_ << endl;
 			cout << "  Inititialized: " << is_initialized_ << endl;
 		}
 
@@ -174,8 +174,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 		
 		if (bDISPLAY) {
 			cout << "  Inititialized: " << is_initialized_ << endl;
-			cout << "  EKF state x: " << ekf_.x_ << endl;
-			cout << "  EKF error noise P: " << ekf_.P_ << endl;
+			cout << "  EKF state x: " << endl << ekf_.x_ << endl;
+			cout << "  EKF error noise P: " << endl << ekf_.P_ << endl;
 			cout << "--- EKF: ProcessMeasurement - End" << endl;
 		}
 		
@@ -252,10 +252,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   // print the output
 	if (bDISPLAY) {
 		cout << "  Delta time: " << dt << endl;
-		cout << "  EKF model F: " << ekf_.F_ << endl;
-		cout << "  EKF process noise Q: " << ekf_.Q_ << endl;
-		cout << "  EKF state x: " << ekf_.x_ << endl;
-		cout << "  EKF error noise P: " << ekf_.P_ << endl;
+		cout << "  EKF model F: " << endl << ekf_.F_ << endl;
+		cout << "  EKF process noise Q: " << endl << ekf_.Q_ << endl;
+		cout << "  EKF state x: " << endl << ekf_.x_ << endl;
+		cout << "  EKF error noise P: " << endl << ekf_.P_ << endl;
 		cout << "--- EKF: ProcessMeasurement - End" << endl;
 	}
 	

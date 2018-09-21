@@ -75,7 +75,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 
 	// display message if required	
 	if (bDISPLAY) {
-		cout << "  RMSE: " << rmse << endl;
+		cout << "  RMSE: " << endl << rmse << endl;
 		cout << "--- Tools: CalculateRMSE - End" << endl;
 	}
 	
@@ -93,7 +93,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	// display message if required	
 	if (bDISPLAY) {
 		cout << "Tools: CalculateJacobian - Start" << endl;
-		cout << "  State x (px, py, vx, vy): " << x_state << endl;
+		cout << "  State x (px, py, vx, vy): " << endl << x_state << endl;
 	}
 
 	// recover state parameters
@@ -122,7 +122,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 
 	// display message if required	
 	if (bDISPLAY) {
-		cout << "  Jacobian Hj: " << Hj << endl;
+		cout << "  Jacobian Hj: " << endl << Hj << endl;
 		cout << "--- Tools: CalculateJacobian - End" << endl;
 	}
 	

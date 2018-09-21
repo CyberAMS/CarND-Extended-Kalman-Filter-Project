@@ -36,7 +36,7 @@ std::string hasData(std::string s) {
 int main() {
 	
 	// define constants
-	const bool bDISPLAY = false;
+	const bool bDISPLAY = true;
 	
   uWS::Hub h;
 	
