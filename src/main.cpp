@@ -1,5 +1,6 @@
 #include <uWS/uWS.h>
 #include <iostream>
+#include <fstream>
 #include "json.hpp"
 #include <math.h>
 #include "FusionEKF.h"
@@ -37,6 +38,11 @@ int main() {
 	
 	// define constants
 	const bool bDISPLAY = true;
+	
+	// redirect standard output to filebuf
+	ofstream out("out.txt");
+  auto *coutbuf = cout.rdbuf();
+  cout.rdbuf(out.rdbuf());
 	
   uWS::Hub h;
 	
