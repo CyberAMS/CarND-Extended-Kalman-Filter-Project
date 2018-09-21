@@ -84,7 +84,7 @@ private:
 	const int NUM_STATES = 4;
 	const int NUM_OBSERVABLE_STATES = 2;
 	const int ZERO_DETECTION = 0.0001;
-  const double NOISE_AX = 9.0;
+	const double NOISE_AX = 9.0;
 	const double NOISE_AY = 9.0;
 	
 };
