@@ -43,10 +43,10 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
 		cout << "Tools: CalculateRMSE - Start" << endl;
 		for (vCount = 0; vCount < estimations.size(); ++vCount) {
-			cout << "  " << vCount << ": " << estimations[vCount] << endl;
+			cout << "  " << vCount << ": " << endl << estimations[vCount] << endl;
 		}
 		for (vCount = 0; vCount < ground_truth.size(); ++vCount) {
-			cout << "  " << vCount << ": " << ground_truth[vCount] << endl;
+			cout << "  " << vCount << ": " << endl << ground_truth[vCount] << endl;
 		}
 	}
 
