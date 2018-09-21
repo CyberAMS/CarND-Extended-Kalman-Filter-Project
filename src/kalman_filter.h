@@ -108,7 +108,7 @@ private:
    * Updates the state using y
    * @param y The measurement post fit
    */
-  void KalmanFilter::UpdateWithY(const VectorXd &y);
+  void UpdateWithY(const VectorXd &y);
 
 };
 
