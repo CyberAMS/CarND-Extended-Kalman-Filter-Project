@@ -37,11 +37,12 @@ string hasData(string s) {
 int main() {
 	
 	// define constants
+	const bool bFILEOUTPUT = true;
 	const bool bDISPLAY = true;
 	
-	// redirect standard output to filebuf
+	// define file for redirecting standard output
 	ofstream out("out.txt");
-  cout.rdbuf(out.rdbuf());
+	auto *coutbuf = std::cout.rdbuf(); // save screen object
 	
   uWS::Hub h;
 	
@@ -108,6 +109,11 @@ int main() {
           		meas_package.timestamp_ = timestamp;
           }
 					
+					// redirect standard output to file if necessary
+					if (bFILEOUTPUT) {
+						cout.rdbuf(out.rdbuf());
+					}
+
 					// display message if required
 					if (bDISPLAY) {
 						cout << "Main: onMessage - Start" << endl;
@@ -166,7 +172,12 @@ int main() {
 						cout << "  Message: " << msg << endl;
 						cout << "--- Main: onMessage - End" << endl;
 					}					
-
+					
+					// set standard output to screen if necessary
+					if (bFILEOUTPUT) {
+						cout.rdbuf(coutbuf);
+					}
+					
         }
 				
       } else {

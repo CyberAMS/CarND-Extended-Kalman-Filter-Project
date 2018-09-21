@@ -154,8 +154,8 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	
 	// display message if required
 	if (bDISPLAY) {
-		cout << "  Measurement function hx (roh, theta, rho_dot): " << hx << endl;
-		cout << "  Measurement post fit y: " << y_radar << endl;
+		cout << "  Measurement function hx (roh, theta, rho_dot): " << endl << hx << endl;
+		cout << "  Measurement post fit y: " << endl << y_radar << endl;
 		cout << "--- KALMAN: UpdateEKF - End" << endl;
 		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
