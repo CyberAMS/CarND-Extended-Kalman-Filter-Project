@@ -40,10 +40,6 @@ int main() {
 	const bool bFILEOUTPUT = true;
 	const bool bDISPLAY = true;
 	
-	// define file for redirecting standard output
-	ofstream out("out.txt");
-	streambuf *coutbuf = cout.rdbuf(); // save screen object
-	
   uWS::Hub h;
 	
   // Create a Kalman Filter instance
@@ -108,6 +104,10 @@ int main() {
           		iss >> timestamp;
           		meas_package.timestamp_ = timestamp;
           }
+					
+					// define file for redirecting standard output
+					ofstream out("out.txt");
+					streambuf *coutbuf = cout.rdbuf(); // save screen object
 					
 					// redirect standard output to file if necessary
 					if (bFILEOUTPUT) {
