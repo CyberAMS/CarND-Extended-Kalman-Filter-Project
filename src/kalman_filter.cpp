@@ -50,6 +50,7 @@ void KalmanFilter::Predict() {
   
 	// display message if required
 	if (bDISPLAY) {
+		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
 		cout << "KALMAN: Predict - Start" << endl;
 		cout << "  Model F: " << endl << F_ << endl;
 		cout << "  State x (px, py, vx, vy): " << endl << x_ << endl;
@@ -70,6 +71,7 @@ void KalmanFilter::Predict() {
 		cout << "  New state x (px, py, vx, vy): " << endl << x_ << endl;
 		cout << "  New error noise P: " << endl << P_ << endl;
 		cout << "--- KALMAN: Predict - End" << endl;
+		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
 	
 }
@@ -82,6 +84,7 @@ void KalmanFilter::Update(const VectorXd &z) {
 	
 	// display message if required
 	if (bDISPLAY) {
+		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
 		cout << "KALMAN: Update - Start" << endl;
 		cout << "  Measurement z: " << endl << z << endl;
 		cout << "  Measurement matrix H: " << endl << H_ << endl;
@@ -98,6 +101,7 @@ void KalmanFilter::Update(const VectorXd &z) {
 	if (bDISPLAY) {
 		cout << "  Measurement post fit y: " << endl << y_laser << endl;
 		cout << "--- KALMAN: Update - End" << endl;
+		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
 	
 }
@@ -110,6 +114,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	
 	// display message if required
 	if (bDISPLAY) {
+		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
 		cout << "KALMAN: UpdateEKF - Start" << endl;
 		cout << "  Measurement z: " << endl << z << endl;
 		cout << "  State x (px, py, vx, vy): " << endl << x_ << endl;
@@ -152,6 +157,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 		cout << "  Measurement function hx (roh, theta, rho_dot): " << hx << endl;
 		cout << "  Measurement post fit y: " << y_radar << endl;
 		cout << "--- KALMAN: UpdateEKF - End" << endl;
+		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
 	
 }
@@ -160,6 +166,7 @@ void KalmanFilter::UpdateWithY(const VectorXd &y){
 	
 	// display message if required
 	if (bDISPLAY) {
+		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
 		cout << "KALMAN: UpdateWithY - Start" << endl;
 		cout << "  Measurement post fit y: " << endl << y << endl;
 		cout << "  State x (px, py, vx, vy): " << endl << x_ << endl;
@@ -190,6 +197,7 @@ void KalmanFilter::UpdateWithY(const VectorXd &y){
 		cout << "  New state x (px, py, vx, vy): " << endl << x_ << endl;
 		cout << "  New error noise P: " << endl << P_ << endl;
 		cout << "--- KALMAN: UpdateWithY - End" << endl;
+		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
 
 }

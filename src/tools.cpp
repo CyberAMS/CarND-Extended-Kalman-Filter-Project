@@ -40,9 +40,10 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 	
 	// display message if required	
 	if (bDISPLAY) {
+		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
 		cout << "Tools: CalculateRMSE - Start" << endl;
-		// cout << "  Estimations: " << estimations << endl; // produces error message
-		// cout << "  Ground truth: " << ground_truth << endl; // produces error message
+		cout << "  Estimations: " << estimations << endl; // produces error message
+		cout << "  Ground truth: " << ground_truth << endl; // produces error message
 	}
 
 	// check the validity of the following inputs:
@@ -77,6 +78,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 	if (bDISPLAY) {
 		cout << "  RMSE: " << endl << rmse << endl;
 		cout << "--- Tools: CalculateRMSE - End" << endl;
+		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
 	
 	// return the result
@@ -92,6 +94,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 
 	// display message if required	
 	if (bDISPLAY) {
+		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
 		cout << "Tools: CalculateJacobian - Start" << endl;
 		cout << "  State x (px, py, vx, vy): " << endl << x_state << endl;
 	}
@@ -124,6 +127,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	if (bDISPLAY) {
 		cout << "  Jacobian Hj: " << endl << Hj << endl;
 		cout << "--- Tools: CalculateJacobian - End" << endl;
+		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
 	
   // return the result

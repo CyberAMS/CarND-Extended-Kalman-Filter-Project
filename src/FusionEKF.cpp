@@ -91,6 +91,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	
 	// display message if required
 	if (bDISPLAY) {
+		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
 		cout << "EKF: ProcessMeasurement - Start" << endl;
 		cout << "  Time stamp: " << measurement_pack.timestamp_ << endl;
 		cout << "  Sensor type: " << measurement_pack.sensor_type_ << endl;
@@ -177,6 +178,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 			cout << "  EKF state x: " << endl << ekf_.x_ << endl;
 			cout << "  EKF error noise P: " << endl << ekf_.P_ << endl;
 			cout << "--- EKF: ProcessMeasurement - End" << endl;
+			cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 		}
 		
     return;
@@ -257,6 +259,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 		cout << "  EKF state x: " << endl << ekf_.x_ << endl;
 		cout << "  EKF error noise P: " << endl << ekf_.P_ << endl;
 		cout << "--- EKF: ProcessMeasurement - End" << endl;
+		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
 	
 }
