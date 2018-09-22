@@ -109,7 +109,7 @@ RADAR measurements are structures the following way:
 
 ### 2. Input data files
 
-The input data file contains LIDAR or RADAR measurements in rows. The variables inside a row are separated by tabulators. An example file can be found in [.\data\obj_pose-laser-radar-synthetic-input.txt](.\data\obj_pose-laser-radar-synthetic-input.txt).
+The input data file contains LIDAR or RADAR measurements in rows. The variables inside a row are separated by tabulators. An example file can be found in [./data/obj_pose-laser-radar-synthetic-input.txt](./data/obj_pose-laser-radar-synthetic-input.txt).
 
 Additional input data files can be generated with the [utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities) which contains [Matlab](https://www.mathworks.com/products/matlab.html) scripts that can generate this data.
 
