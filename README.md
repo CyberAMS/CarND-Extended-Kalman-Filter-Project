@@ -29,7 +29,7 @@ The following table shows an overview of the most important files:
     1. Input data structure
     1. Input data files
 1. Extended Kalman filter implementation
-    1. Necessary equations
+    1. Primary equations
     1. Implementation in C/C++
 1. Execution with given input data
     1. Commands to start the simulation
@@ -38,11 +38,8 @@ The following table shows an overview of the most important files:
 
 [//]: # (Image References)
 
-[image1]: docu_images/01_02_center_2018_08_18_06_11_22_467.jpg
-[image2]: docu_images/01_02_center_2018_08_18_06_11_22_467_cropped.jpg
-[image3]: docu_images/01_02_center_2018_08_18_06_11_22_467_flipped.jpg
-[image4]: docu_images/04_01_mse_loss_index.png
-[image5]: docu_images/07_01_nm_bridge_stuck.jpg
+[image1]: ./180921_StAn_EKF_Dataset_1.png
+[image2]: ./180921_StAn_EKF_Dataset_2.png
 
 ---
 
@@ -53,18 +50,21 @@ The following table shows an overview of the most important files:
 This project requires the following programs:
 
 * gcc/g++ >= 5.4
-  * Linux: gcc / g++ is installed by default on most Linux distros
-  * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
-  * Windows: recommend using [MinGW](http://www.mingw.org/)
+  - Linux: gcc / g++ is installed by default on most Linux distros
+  - Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
+  - Windows: recommend using [MinGW](http://www.mingw.org/)
+  
 * cmake >= 3.5
-  * All OSes: [click here for installation instructions](https://cmake.org/install/)
+  - All OSes: [click here for installation instructions](https://cmake.org/install/)
+  
 * make >= 4.1 (Linux, Mac), 3.81 (Windows)
-  * Linux: make is installed by default on most Linux distros
-  * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
-  * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
+  - Linux: make is installed by default on most Linux distros
+  - Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
+  - Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
+  
 * [uWebSocketIO](https://github.com/uWebSockets/uWebSockets)
-  * Works with Linux and Mac systems
-  * Windows: Use Docker, VMware or even [Windows 10 Bash on Ubuntu](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/) (although I wasn't able to get it working with the latest Ubuntu app in Windows 10)
+  - Works with Linux and Mac systems
+  - Windows: Use Docker, VMware or even [Windows 10 Bash on Ubuntu](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/) (although I wasn't able to get it working with the latest Ubuntu app in Windows 10)
 
 ### 2. Udacity Simulator
 
@@ -115,11 +115,11 @@ Additional input data files can be generated with the [utilities repo](https://g
 
 ## 3. Extended Kalman filter implementation
 
-### 1. Necessary equations
+### 1. Primary equations
 
 In this project the prediction steps of the standard Kalman filter for LIDAR measurements and the extended Kalman filter for RADAR measurements are identical, because we assume a linear motion model.
 
-```C++
+```C
 // predict state - linear model, i.e. same for LIDAR and RADAR (no need to use Jacobian of F)
 x_ = F_ * x_;
 
@@ -128,7 +128,7 @@ Ft = F_.transpose();
 P_ = (F_ * P_ * Ft) + Q_;
 ```
 
-The update step of the standard Kalman filter for LIDAR measurements
+The update step of the standard Kalman filter for LIDAR measurements is shown below.
 
 ```C
 // calculate y for LIDAR measurement (linear model, standard KALMAN filter)
@@ -148,60 +148,94 @@ x_ = x_ + (K * y);
 P_ = (I - K * H_) * P_;
 ```
 
+In the update step of the extended Kalman filter for RADAR measurements the measurement post fit `y` is calculated via the measurement function `hx` as shown below.
+
+```C
+// calculate polar state variables
+rho = sqrt((px * px) + (py * py));
+if (fabs(rho) < ZERO_DETECTION) {
+    rho = ((rho > 0) - (rho < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
+}
+phi = atan2(py, px);
+rho_dot = ((px * vx) + (py * vy)) / rho;
+
+// calculate h
+hx(0) = rho;
+hx(1) = phi;
+hx(2) = rho_dot;
+
+// calculate y (non-linear model, extended KALMAN filter)
+y_radar = z - hx;
+while (y_radar(1) > PI || y_radar(1) < -PI ) {
+    if (y_radar(1) > PI) {
+        y_radar(1) -= PI;
+    } else {
+        y_radar(1) += PI;
+    }
+}
+```
+
+All the other extended Kalman filter matrix calculations are the same as for the standard Kalman filter. The only exception is that the measurement matrix `H` is replaced by the Jacobian `Hj`.
+
+```C
+Hj = MatrixXd(NUM_RADAR_MEASUREMENTS, NUM_STATES);
+Hj << 1, 1, 0, 0,
+      1, 1, 0, 0,
+      1, 1, 1, 1;
+
+...
+
+// pre-compute a set of terms to avoid repeated calculation
+c1 = ((px * px) + (py * py));
+if (fabs(c1) < ZERO_DETECTION) {
+    c1 = ((c1 > 0) - (c1 < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
+}
+c2 = sqrt(c1);
+c3 = (c1 * c2);
+
+//compute the Jacobian matrix
+Hj(0, 0) = (px / c2);
+Hj(0, 1) = (py / c2);
+Hj(1, 0) = -(py / c1);
+Hj(1, 1) = (px / c1);
+Hj(2, 0) = ((py * ((vx * py) - (vy * px))) / c3);
+Hj(2, 1) = ((px * ((px * vy) - (py * vx))) / c3);
+Hj(2, 2) = (px / c2);
+Hj(2, 3) = (py / c2);
+```
+
 ### 2. Implementation in C/C++
 
-XXX
+The `main.cpp` function connects to the simulator via [uWebSocketIO](https://github.com/uWebSockets/uWebSockets) and receives either LIDAR or RADAR measurements as decribed above.
 
-INPUT: values provided by the simulator to the c++ program
+An object `fusionEKF` of the `FusionEKF` class (defined in `FusionEKF.h` and `FusionEKF.cpp`) is used to process the input data via the `FusionEKF::ProcessMeasurement()` method. In the constructor of `FusionEKF` all matrix variables and an object `ekf_` of the class `KalmanFilter` (defined in `kalman_filter.h` and `kalman_filter.cpp`) are initialized. The first measurement is used in the `FusionEKF::ProcessMeasurement()` method to initialize the state of the Kalman filter object `ekf_`. The `KalmanFilter` class contains the methods for prediction `KalmanFilter::Predict()` as well as LIDAR update `KalmanFilter::Update()` and RADAR update `KalmanFilter::UpdateEKF()`. These methods are called by the `FusionEKF::ProcessMeasurement()` method in the required sequence and with the correct parameters.
 
-["sensor_measurement"] => the measurement that the simulator observed (either lidar or radar)
+After a measurement has been processed using the `fusionEKF` object, the `main.cpp` function receives the new state prediction and calculates the Root Mean Square Error (RMSE) of estimation versus provided ground truth. All results are then sent back to the simulator.
 
-OUTPUT: values provided by the c++ program to the simulator
-
-["estimate_x"] <= kalman filter estimated position x
-["estimate_y"] <= kalman filter estimated position y
-["rmse_x"]
-["rmse_y"]
-["rmse_vx"]
-["rmse_vy"]
+The `Tools` class (defined in `tools.h` and `tools.cpp`) implements the RMSE calculation with the `Tools::CalculateRMSE()` method and the calculation of the Jacobian with the `Tools::CalculateJacobian()` method.
 
 ## 4. Execution with given input data
 
 ### 1. Commands to start the simulation
 
-XXX
+The program is compiled and executed within the `build` folder using the following commands.
 
-1. mkdir build
-2. cd build
-3. cmake ..
-4. make
-5. ./ExtendedKF
+1. cd build
+2. cmake ..
+3. make
+4. ./ExtendedKF
+
+Once the program is running and listening on port 4567 the simulator can be started.
 
 ### 2. Simulation results
 
-XXX
+In the simulator the blue dots are LIDAR measurements and the red dots are RADAR measurements. The sensor fusion results are shown as green dots and are clearly closer to the ground truth values than the individual measurements for LIDAR or RADAR (see image below).
+
+![alt text][image1]
+
+The debugging output of this example can be found in [./build/out.txt](./build/out.txt).
+
+The final RMSE values are `\[0.0973, 0.0855, 0.4513, 0.4399\]` and therefore well below the maximum allowed error values `\[0.11, 0.11, 0.52, 0.52\]`.
 
 ## 5. Discussion
-
-XXX
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
