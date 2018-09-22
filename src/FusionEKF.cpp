@@ -195,7 +195,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	// get current time stamp	
 	current_timestamp = measurement_pack.timestamp_;
 
-		/**
+	/**
 	TODO:
 		* Update the state transition matrix F according to the new elapsed time.
 			- Time is measured in seconds.
