@@ -117,7 +117,36 @@ Additional input data files can be generated with the [utilities repo](https://g
 
 ### 1. Necessary equations
 
-XXX
+In this project the prediction steps of the standard Kalman filter for LIDAR measurements and the extended Kalman filter for RADAR measurements are identical, because we assume a linear motion model.
+
+```C++
+// predict state - linear model, i.e. same for LIDAR and RADAR (no need to use Jacobian of F)
+x_ = F_ * x_;
+
+// predict noise
+Ft = F_.transpose();
+P_ = (F_ * P_ * Ft) + Q_;
+```
+
+The update step of the standard Kalman filter for LIDAR measurements
+
+```C
+// calculate y for LIDAR measurement (linear model, standard KALMAN filter)
+y_laser = z - H_ * x_;
+
+// calculate identity matrix
+I = MatrixXd::Identity(NUM_STATES, NUM_STATES);
+
+// calculate matrices
+Ht = H_.transpose();
+S = H_ * P_ * Ht + R_;
+Si = S.inverse();
+K =  P_ * Ht * Si;
+
+// new state and noise
+x_ = x_ + (K * y);
+P_ = (I - K * H_) * P_;
+```
 
 ### 2. Implementation in C/C++
 
