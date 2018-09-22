@@ -39,6 +39,7 @@ int main() {
 	// define constants
 	const bool bFILEOUTPUT = true;
 	const bool bDISPLAY = true;
+	bool bInitialized = false;
 	
   uWS::Hub h;
 	
@@ -106,8 +107,11 @@ int main() {
           }
 					
 					// define file for redirecting standard output
-					ofstream out("out.txt");
-					streambuf *coutbuf = cout.rdbuf(); // save screen object
+					if (!bInitialized) {
+						ofstream out("out.txt");
+						streambuf *coutbuf = cout.rdbuf(); // save screen object
+						bInitialized = true;
+					}
 					
 					// redirect standard output to file if necessary
 					if (bFILEOUTPUT) {
