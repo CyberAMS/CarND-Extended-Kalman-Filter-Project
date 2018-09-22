@@ -175,7 +175,7 @@ while (y_radar(1) > PI || y_radar(1) < -PI ) {
 }
 ```
 
-All the other extended Kalman filter matrix calculations are the same as for the standard Kalman filter. The only exception is that the measurement matrix `H` is replaced by the Jacobian `Hj`.
+All the other extended Kalman filter matrix calculations are the same as for the standard Kalman filter. The only exception is that the measurement matrix `H_` is replaced by the Jacobian `Hj`.
 
 ```C
 Hj = MatrixXd(NUM_RADAR_MEASUREMENTS, NUM_STATES);
@@ -193,7 +193,7 @@ if (fabs(c1) < ZERO_DETECTION) {
 c2 = sqrt(c1);
 c3 = (c1 * c2);
 
-//compute the Jacobian matrix
+// compute the Jacobian matrix
 Hj(0, 0) = (px / c2);
 Hj(0, 1) = (py / c2);
 Hj(1, 0) = -(py / c1);
@@ -210,7 +210,7 @@ The `main.cpp` function connects to the simulator via [uWebSocketIO](https://git
 
 An object `fusionEKF` of the `FusionEKF` class (defined in `FusionEKF.h` and `FusionEKF.cpp`) is used to process the input data via the `FusionEKF::ProcessMeasurement()` method. In the constructor of `FusionEKF` all matrix variables and an object `ekf_` of the class `KalmanFilter` (defined in `kalman_filter.h` and `kalman_filter.cpp`) are initialized. The first measurement is used in the `FusionEKF::ProcessMeasurement()` method to initialize the state of the Kalman filter object `ekf_`. The `KalmanFilter` class contains the methods for prediction `KalmanFilter::Predict()` as well as LIDAR update `KalmanFilter::Update()` and RADAR update `KalmanFilter::UpdateEKF()`. These methods are called by the `FusionEKF::ProcessMeasurement()` method in the required sequence and with the correct parameters.
 
-After a measurement has been processed using the `fusionEKF` object, the `main.cpp` function receives the new state prediction and calculates the Root Mean Square Error (RMSE) of estimation versus provided ground truth. All results are then sent back to the simulator.
+After a measurement has been processed using the `fusionEKF` object, the `main.cpp` function receives the new state prediction and calculates the [Root Mean Square Error (RMSE)](https://en.wikipedia.org/wiki/Root-mean-square_deviation) of estimation versus provided ground truth. All results are then sent back to the simulator.
 
 The `Tools` class (defined in `tools.h` and `tools.cpp`) implements the RMSE calculation with the `Tools::CalculateRMSE()` method and the calculation of the Jacobian with the `Tools::CalculateJacobian()` method.
 
@@ -235,7 +235,12 @@ In the simulator the blue dots are LIDAR measurements and the red dots are RADAR
 
 The debugging output of this example can be found in [./build/out.txt](./build/out.txt).
 
-The final RMSE values are `\[0.0973, 0.0855, 0.4513, 0.4399\]` and therefore well below the maximum allowed error values `\[0.11, 0.11, 0.52, 0.52\]`.
+The final RMSE values are `[0.0973, 0.0855, 0.4513, 0.4399]` and therefore well below the maximum allowed error values `[0.11, 0.11, 0.52, 0.52]`.
 
 ## 5. Discussion
 
+The main challenge of this project is the setup of a working tool chain when you use a Windows computer.
+
+Also, the provided templates used a mixture of different programming styles and a lot of inline variable definitions. For consistency and easier debugging I did some minor clean up.
+
+As `C/C++` requires to compile the code prior to execution, I added a lot of debugging messages that are routed via the standard output `cout` to the file [./build/out.txt](./build/out.txt). In lack of an [Integrated Development Environment (IDE)](https://en.wikipedia.org/wiki/Integrated_development_environment) this helped a lot to quickly get a working program. It will also help if somebody wants to make additional changes to this code in the future. The debugging can be turned off by setting all `bDISPLAY` variables to `false`.
