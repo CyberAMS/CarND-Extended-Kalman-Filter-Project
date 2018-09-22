@@ -50,40 +50,68 @@ The following table shows an overview of the most important files:
 
 ### 1. Gcc, Cmake, Make and uWebSocketIO
 
-XXX
+This project requires the following programs:
 
+* gcc/g++ >= 5.4
+  * Linux: gcc / g++ is installed by default on most Linux distros
+  * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
+  * Windows: recommend using [MinGW](http://www.mingw.org/)
 * cmake >= 3.5
   * All OSes: [click here for installation instructions](https://cmake.org/install/)
 * make >= 4.1 (Linux, Mac), 3.81 (Windows)
   * Linux: make is installed by default on most Linux distros
   * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
   * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
-* gcc/g++ >= 5.4
-  * Linux: gcc / g++ is installed by default on most Linux distros
-  * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
-  * Windows: recommend using [MinGW](http://www.mingw.org/)
-
-[uWebSocketIO](https://github.com/uWebSockets/uWebSockets) for either Linux or Mac systems. For windows you can use either Docker, VMware, or even [Windows 10 Bash on Ubuntu](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/)
+* [uWebSocketIO](https://github.com/uWebSockets/uWebSockets)
+  * Works with Linux and Mac systems
+  * Windows: Use Docker, VMware or even [Windows 10 Bash on Ubuntu](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/) (although I wasn't able to get it working with the latest Ubuntu app in Windows 10)
 
 ### 2. Udacity Simulator
 
-XXX
-
-[here](https://github.com/udacity/self-driving-car-sim/releases)
+The extended Kalman filter program connects to the [Udacity Simulator](https://github.com/udacity/self-driving-car-sim/releases) via [uWebSocketIO](https://github.com/uWebSockets/uWebSockets). The simulator is available for Linux, Mac and Windows.
 
 ## 2. Input data definition
 
 ### 1. Input data structure
 
-XXX
+The input data is either a LIDAR or RADAR measurement.
+
+LIDAR measurements are structures the following way:
+
+| Variable              | Value or Description                  |
+|-----------------------|---------------------------------------|
+| `sensor_type`         | L                                     |
+| `x_measured`          | measured x position of object         |
+| `y_measured`          | measured y position of object         |
+| `timestamp`           | time in nano seconds since 01/01/1970 |
+| `x_groundtruth`       | actual x position of object           |
+| `y_groundtruth`       | actual y position of object           |
+| `vx_groundtruth`      | actual x velocity of object           |
+| `vy_groundtruth`      | actual y velocity of object           |
+| `yaw_groundtruth`     | actual yaw angle of object (not used) |
+| `yawrate_groundtruth` | actual yaw rate of object (not used)  |
+
+RADAR measurements are structures the following way:
+
+| Variable              | Value or Description                  |
+|-----------------------|---------------------------------------|
+| `sensor_type`         | R                                     |
+| `rho_measured`        | distance to object                    |
+| `phi_measured`        | angle to object                       |
+| `rhodot_measured`     | change of distance to object          |
+| `timestamp`           | time in nano seconds since 01/01/1970 |
+| `x_groundtruth`       | actual x position of object           |
+| `y_groundtruth`       | actual y position of object           |
+| `vx_groundtruth`      | actual x velocity of object           |
+| `vy_groundtruth`      | actual y velocity of object           |
+| `yaw_groundtruth`     | actual yaw angle of object (not used) |
+| `yawrate_groundtruth` | actual yaw rate of object (not used)  |
 
 ### 2. Input data files
 
-XXX
+The input data file contains LIDAR or RADAR measurements in rows. The variables inside a row are separated by tabulators. An example file can be found in [.\data\obj_pose-laser-radar-synthetic-input.txt](.\data\obj_pose-laser-radar-synthetic-input.txt).
 
-If you'd like to generate your own radar and lidar data, see the
-[utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities) for
-Matlab scripts that can generate additional data.
+Additional input data files can be generated with the [utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities) which contains [Matlab](https://www.mathworks.com/products/matlab.html) scripts that can generate this data.
 
 ## 3. Extended Kalman filter implementation
 
