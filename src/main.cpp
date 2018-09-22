@@ -35,11 +35,15 @@ string hasData(string s) {
 	
 }
 
+// define constants
+const bool bFILEOUTPUT = true;
+const bool bDISPLAY = true;
+
+// define file for redirecting standard output and append
+ofstream out("out.txt", fstream::app);
+streambuf *coutbuf = cout.rdbuf(); // save screen object
+
 int main() {
-	
-	// define constants
-	const bool bFILEOUTPUT = true;
-	const bool bDISPLAY = true;
 	
   uWS::Hub h;
 	
@@ -108,8 +112,6 @@ int main() {
 					
 					// redirect standard output to file if necessary
 					if (bFILEOUTPUT) {
-						ofstream out("out.txt", fstream::app); // define file for redirecting standard output and append
-						streambuf *coutbuf = cout.rdbuf(); // save screen object
 						cout.rdbuf(out.rdbuf());
 					}
 
