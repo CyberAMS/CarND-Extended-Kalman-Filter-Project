@@ -1,46 +1,56 @@
-# Extended Kalman Filter Project Starter Code
-Self-Driving Car Engineer Nanodegree Program
+# Project: Extended Kalman Filter
 
-In this project you will utilize a kalman filter to estimate the state of a moving object of interest with noisy lidar and radar measurements. Passing the project requires obtaining RMSE values that are lower than the tolerance outlined in the project rubric. 
+This project has been prepared by Andre Strobel.
 
-This project involves the Term 2 Simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases)
+The goal of this project is to program an extended Kalman filter in *C/C++* to demonstrate [sensor fusion](https://en.wikipedia.org/wiki/Sensor_fusion). In this example the extended Kalman filter tracks a moving object using [LIDAR](https://en.wikipedia.org/wiki/Lidar) and [RADAR](https://en.wikipedia.org/wiki/Radar) measurements.
 
-This repository includes two files that can be used to set up and install [uWebSocketIO](https://github.com/uWebSockets/uWebSockets) for either Linux or Mac systems. For windows you can use either Docker, VMware, or even [Windows 10 Bash on Ubuntu](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/) to install uWebSocketIO. Please see [this concept in the classroom](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/16cf4a78-4fc7-49e1-8621-3450ca938b77) for the required version and installation scripts.
+The following table shows an overview of the most important files:
 
-Once the install for uWebSocketIO is complete, the main program can be built and run by doing the following from the project top directory.
-
-1. mkdir build
-2. cd build
-3. cmake ..
-4. make
-5. ./ExtendedKF
-
-Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
-
-Note that the programs that need to be written to accomplish the project are src/FusionEKF.cpp, src/FusionEKF.h, kalman_filter.cpp, kalman_filter.h, tools.cpp, and tools.h
-
-The program main.cpp has already been filled out, but feel free to modify it.
-
-Here is the main protcol that main.cpp uses for uWebSocketIO in communicating with the simulator.
-
-
-INPUT: values provided by the simulator to the c++ program
-
-["sensor_measurement"] => the measurement that the simulator observed (either lidar or radar)
-
-
-OUTPUT: values provided by the c++ program to the simulator
-
-["estimate_x"] <= kalman filter estimated position x
-["estimate_y"] <= kalman filter estimated position y
-["rmse_x"]
-["rmse_y"]
-["rmse_vx"]
-["rmse_vy"]
+| File                                          | Description                                                    |
+|-----------------------------------------------|----------------------------------------------------------------|
+| README.md                                     | This file                                                      |
+| install-ubuntu.sh                             | Script to install uWebSocketIO                                 |
+| data/obj_pose-laser-radar-synthetic-input.txt | Example input data file                                        |
+| build/ExtendedKF                              | Compiled executable to run the extended Kalman filter          |
+| build/out.txt                                 | Debugging output of the extended Kalman filter                 |
+| src/main.cpp                                  | Source code of main function of extended Kalman filter project |
+| src/FusionEKF.{h, cpp}                        | Source code of sensor fusion object                            |
+| src/kalman_filter.{h, cpp}                    | Source code of extended Kalman filter implementation           |
+| src/tools.{h, cpp}                            | Source code of tool object used by extended Kalman filter      |
 
 ---
 
-## Other Important Dependencies
+## Content
+
+1. Tool chain setup
+    1. Gcc, Cmake, Make and uWebSocketIO
+    1. Udacity Simulator
+1. Input data definition
+    1. Input data structure
+    1. Input data files
+1. Extended Kalman filter implementation
+    1. Necessary equations
+    1. Implementation in C/C++
+1. Execution with given input data
+    1. Commands to start the simulation
+    1. Simulation results
+1. Discussion
+
+[//]: # (Image References)
+
+[image1]: docu_images/01_02_center_2018_08_18_06_11_22_467.jpg
+[image2]: docu_images/01_02_center_2018_08_18_06_11_22_467_cropped.jpg
+[image3]: docu_images/01_02_center_2018_08_18_06_11_22_467_flipped.jpg
+[image4]: docu_images/04_01_mse_loss_index.png
+[image5]: docu_images/07_01_nm_bridge_stuck.jpg
+
+---
+
+## 1. Tool chain setup
+
+### 1. Gcc, Cmake, Make and uWebSocketIO
+
+XXX
 
 * cmake >= 3.5
   * All OSes: [click here for installation instructions](https://cmake.org/install/)
@@ -53,77 +63,88 @@ OUTPUT: values provided by the c++ program to the simulator
   * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
   * Windows: recommend using [MinGW](http://www.mingw.org/)
 
-## Basic Build Instructions
+[uWebSocketIO](https://github.com/uWebSockets/uWebSockets) for either Linux or Mac systems. For windows you can use either Docker, VMware, or even [Windows 10 Bash on Ubuntu](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/)
 
-1. Clone this repo.
-2. Make a build directory: `mkdir build && cd build`
-3. Compile: `cmake .. && make` 
-   * On windows, you may need to run: `cmake .. -G "Unix Makefiles" && make`
-4. Run it: `./ExtendedKF `
+### 2. Udacity Simulator
 
-## Editor Settings
+XXX
 
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
+[here](https://github.com/udacity/self-driving-car-sim/releases)
 
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
+## 2. Input data definition
 
-## Code Style
+### 1. Input data structure
 
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
+XXX
 
-## Generating Additional Data
+### 2. Input data files
 
-This is optional!
+XXX
 
 If you'd like to generate your own radar and lidar data, see the
 [utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities) for
 Matlab scripts that can generate additional data.
 
-## Project Instructions and Rubric
+## 3. Extended Kalman filter implementation
 
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
+### 1. Necessary equations
 
-More information is only accessible by people who are already enrolled in Term 2
-of CarND. If you are enrolled, see [the project resources page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/382ebfd6-1d55-4487-84a5-b6a5a4ba1e47)
-for instructions and the project rubric.
+XXX
 
-## Hints and Tips!
+### 2. Implementation in C/C++
 
-* You don't have to follow this directory structure, but if you do, your work
-  will span all of the .cpp files here. Keep an eye out for TODOs.
-* Students have reported rapid expansion of log files when using the term 2 simulator.  This appears to be associated with not being connected to uWebSockets.  If this does occur,  please make sure you are conneted to uWebSockets. The following workaround may also be effective at preventing large log files.
+XXX
 
-    + create an empty log file
-    + remove write permissions so that the simulator can't write to log
- * Please note that the ```Eigen``` library does not initialize ```VectorXd``` or ```MatrixXd``` objects with zeros upon creation.
+INPUT: values provided by the simulator to the c++ program
 
-## Call for IDE Profiles Pull Requests
+["sensor_measurement"] => the measurement that the simulator observed (either lidar or radar)
 
-Help your fellow students!
+OUTPUT: values provided by the c++ program to the simulator
 
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to ensure
-that students don't feel pressured to use one IDE or another.
+["estimate_x"] <= kalman filter estimated position x
+["estimate_y"] <= kalman filter estimated position y
+["rmse_x"]
+["rmse_y"]
+["rmse_vx"]
+["rmse_vy"]
 
-However! We'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
+## 4. Execution with given input data
 
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
+### 1. Commands to start the simulation
 
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
+XXX
 
-Regardless of the IDE used, every submitted project must
-still be compilable with cmake and make.
+1. mkdir build
+2. cd build
+3. cmake ..
+4. make
+5. ./ExtendedKF
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+### 2. Simulation results
+
+XXX
+
+## 5. Discussion
+
+XXX
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
