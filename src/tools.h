@@ -14,51 +14,51 @@ using Eigen::VectorXd;
 using std::vector;
 
 class Tools {
-	
+
 public:
-	
-  /**
-  * Constructor.
-  */
-  Tools();
 
-  /**
-  * Destructor.
-  */
-  virtual ~Tools();
+	/**
+	* Constructor.
+	*/
+	Tools();
 
-  /**
-  * A helper method to calculate RMSE.
-  */
-  VectorXd CalculateRMSE(const vector<VectorXd> &estimations, const vector<VectorXd> &ground_truth);
+	/**
+	* Destructor.
+	*/
+	virtual ~Tools();
 
-  /**
-  * A helper method to calculate Jacobians.
-  */
-  MatrixXd CalculateJacobian(const VectorXd& x_state);
-	
+	/**
+	* A helper method to calculate RMSE.
+	*/
+	VectorXd CalculateRMSE(const vector<VectorXd> &estimations, const vector<VectorXd> &ground_truth);
+
+	/**
+	* A helper method to calculate Jacobians.
+	*/
+	MatrixXd CalculateJacobian(const VectorXd& x_state);
+
 private:
-	
+
 	// define matrices
 	VectorXd rmse;
 	VectorXd residual;
 	MatrixXd Hj;
-	
+
 	// define cartesian coordinates
-  double px;
-  double py;
-  double vx;
-  double vy;
-	
+	double px;
+	double py;
+	double vx;
+	double vy;
+
 	// define helper terms
-  double c1;
-  double c2;
-  double c3;
+	double c1;
+	double c2;
+	double c3;
 
 	// boolean for display debug messages
 	const bool bDISPLAY = true;
 	const bool bDISPLAYDETAIL = false;
-	
+
 	// define constants
 	const int NUM_RADAR_MEASUREMENTS = 3;
 	const int NUM_STATES = 4;
@@ -66,7 +66,7 @@ private:
 
 	// define variables
 	unsigned int vCount;
-	
+
 };
 
 #endif /* TOOLS_H_ */

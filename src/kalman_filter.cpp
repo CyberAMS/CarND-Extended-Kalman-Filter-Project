@@ -18,28 +18,28 @@ using std::vector;
 // VectorXd or MatrixXd objects with zeros upon creation.
 
 KalmanFilter::KalmanFilter() {
-	
+
 	// initialize matrices
 	y_laser = VectorXd(NUM_LASER_MEASUREMENTS);
 	y_laser << 1, 1;
 	y_radar = VectorXd(NUM_RADAR_MEASUREMENTS);	
 	y_radar << 1, 1, 1;
-  hx = VectorXd(NUM_RADAR_MEASUREMENTS);
-  hx << 1, 1, 1;
+	hx = VectorXd(NUM_RADAR_MEASUREMENTS);
+	hx << 1, 1, 1;
 }
 
 KalmanFilter::~KalmanFilter() {}
 
 void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
-                        MatrixXd &H_in, MatrixXd &R_in, MatrixXd &Q_in) {
-													
-  x_ = x_in;
-  P_ = P_in;
-  F_ = F_in;
-  H_ = H_in;
-  R_ = R_in;
-  Q_ = Q_in;
-	
+	                      MatrixXd &H_in, MatrixXd &R_in, MatrixXd &Q_in) {
+
+	x_ = x_in;
+	P_ = P_in;
+	F_ = F_in;
+	H_ = H_in;
+	R_ = R_in;
+	Q_ = Q_in;
+
 }
 
 void KalmanFilter::Predict() {
@@ -47,7 +47,7 @@ void KalmanFilter::Predict() {
 	TODO:
 		* predict the state
 	*/
-  
+
 	// display message if required
 	if (bDISPLAY) {
 		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
@@ -57,14 +57,14 @@ void KalmanFilter::Predict() {
 		cout << "  Error noise P: " << endl << P_ << endl;
 		cout << "  Process noise Q: " << endl << Q_ << endl;
 	}
-	
+
 	// predict state - linear model, i.e. same for LIDAR and RADAR (no need to use Jacobian of F)
 	x_ = F_ * x_;
-	
+
 	// predict noise
 	Ft = F_.transpose();
 	P_ = (F_ * P_ * Ft) + Q_;
-	
+
 	// display message if required
 	if (bDISPLAY) {
 		cout << "  Inverse model Ft: " << endl << Ft << endl;
@@ -73,7 +73,7 @@ void KalmanFilter::Predict() {
 		cout << "--- KALMAN: Predict - End" << endl;
 		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
-	
+
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
@@ -81,7 +81,7 @@ void KalmanFilter::Update(const VectorXd &z) {
 	TODO:
 		* update the state by using Kalman Filter equations
 	*/
-	
+
 	// display message if required
 	if (bDISPLAY) {
 		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
@@ -90,20 +90,20 @@ void KalmanFilter::Update(const VectorXd &z) {
 		cout << "  Measurement matrix H: " << endl << H_ << endl;
 		cout << "  State x (px, py, vx, vy): " << endl << x_ << endl;
 	}
-	
+
 	// calculate y for LIDAR measurement (linear model, standard KALMAN filter)
 	y_laser = z - H_ * x_;
 
 	// call function to update with this y_laser value
 	UpdateWithY(y_laser);
-	
+
 	// display message if required
 	if (bDISPLAY) {
 		cout << "  Measurement post fit y: " << endl << y_laser << endl;
 		cout << "--- KALMAN: Update - End" << endl;
 		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
-	
+
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
@@ -111,7 +111,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	TODO:
 		* update the state by using Extended Kalman Filter equations
 	*/
-	
+
 	// display message if required
 	if (bDISPLAY) {
 		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
@@ -125,33 +125,33 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	py = x_(1);
 	vx = x_(2);
 	vy = x_(3);
-	
+
 	// calculate polar state variables
-  rho = sqrt((px * px) + (py * py));
-  if (fabs(rho) < ZERO_DETECTION) {
+	rho = sqrt((px * px) + (py * py));
+	if (fabs(rho) < ZERO_DETECTION) {
 		rho = ((rho > 0) - (rho < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
 	}
-  phi = atan2(py, px);
-  rho_dot = ((px * vx) + (py * vy)) / rho;
-	
+	phi = atan2(py, px);
+	rho_dot = ((px * vx) + (py * vy)) / rho;
+
 	// calculate h
-  hx(0) = rho;
+	hx(0) = rho;
 	hx(1) = phi;
 	hx(2) = rho_dot;
 
 	// calculate y (non-linear model, extended KALMAN filter)
 	y_radar = z - hx;
-  while (y_radar(1) > PI || y_radar(1) < -PI ) {
-    if (y_radar(1) > PI) {
-      y_radar(1) -= PI;
-    } else {
-      y_radar(1) += PI;
-    }
+	while (y_radar(1) > PI || y_radar(1) < -PI ) {
+		if (y_radar(1) > PI) {
+			y_radar(1) -= PI;
+		} else {
+			y_radar(1) += PI;
+		}
 	}
-	
+
 	// call function to update with this y_radar value
 	UpdateWithY(y_radar);
-	
+
 	// display message if required
 	if (bDISPLAY) {
 		cout << "  Measurement function hx (roh, phi, rho_dot): " << endl << hx << endl;
@@ -159,11 +159,11 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 		cout << "--- KALMAN: UpdateEKF - End" << endl;
 		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
-	
+
 }
 
 void KalmanFilter::UpdateWithY(const VectorXd &y){
-	
+
 	// display message if required
 	if (bDISPLAY) {
 		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
@@ -176,7 +176,7 @@ void KalmanFilter::UpdateWithY(const VectorXd &y){
 
 	// calculate identity matrix
 	I = MatrixXd::Identity(NUM_STATES, NUM_STATES);
-	
+
 	// calculate matrices
 	Ht = H_.transpose();
 	S = H_ * P_ * Ht + R_;
@@ -186,7 +186,7 @@ void KalmanFilter::UpdateWithY(const VectorXd &y){
 	// new state and noise
 	x_ = x_ + (K * y);
 	P_ = (I - K * H_) * P_;
-	
+
 	// display message if required
 	if (bDISPLAY) {
 		cout << "  Identity matrix I: " << endl << I << endl;

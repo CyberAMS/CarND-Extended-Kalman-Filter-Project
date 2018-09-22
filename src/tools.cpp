@@ -12,32 +12,32 @@ using Eigen::MatrixXd;
 using std::vector;
 
 Tools::Tools() {
-	
+
 	// initialize matrices
 	rmse = VectorXd(NUM_STATES);
 	rmse << 1, 1, 1, 1;
 	Hj = MatrixXd(NUM_RADAR_MEASUREMENTS, NUM_STATES);
 	Hj << 1, 1, 0, 0,
 	      1, 1, 0, 0,
-		    1, 1, 1, 1;
-	
+	      1, 1, 1, 1;
+
 }
 
 Tools::~Tools() {}
 
 VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
-                              const vector<VectorXd> &ground_truth) {
+	                          const vector<VectorXd> &ground_truth) {
 	/**
 	TODO:
 		* Calculate the RMSE here.
 	*/
-	
+
 	// initialize output
 	rmse(0) = 0;
 	rmse(1) = 0;
 	rmse(2) = 0;
 	rmse(3) = 0;
-	
+
 	// display message if required	
 	if (bDISPLAY) {
 		cout << "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =" << endl;
@@ -56,11 +56,11 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 	//  * the estimation vector size should not be zero
 	//  * the estimation vector size should equal ground truth vector size
 	if(estimations.size() == 0 || estimations.size() != ground_truth.size()){
-		
+
 		cout << "Invalid estimation or ground_truth data" << endl;
-		
+
 		return rmse;
-		
+
 	}
 
 	// accumulate squared residuals
@@ -71,7 +71,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 		// coefficient-wise multiplication
 		residual = residual.array() * residual.array();
 		rmse += residual;
-		
+
 	}
 
 	// calculate the mean
@@ -86,10 +86,10 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 		cout << "--- Tools: CalculateRMSE - End" << endl;
 		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
-	
+
 	// return the result
 	return rmse;
-	
+
 }
 
 MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
@@ -113,7 +113,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 
 	// pre-compute a set of terms to avoid repeated calculation
 	c1 = ((px * px) + (py * py));
-  if (fabs(c1) < ZERO_DETECTION) {
+	if (fabs(c1) < ZERO_DETECTION) {
 		c1 = ((c1 > 0) - (c1 < 0)) * ZERO_DETECTION; // avoid value close to zero - retain sign
 	}
 	c2 = sqrt(c1);
@@ -135,8 +135,8 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 		cout << "--- Tools: CalculateJacobian - End" << endl;
 		cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
 	}
-	
-  // return the result
+
+	// return the result
 	return Hj;
-	
+
 }
