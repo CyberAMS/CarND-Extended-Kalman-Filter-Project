@@ -1,6 +1,7 @@
 #include <uWS/uWS.h>
 #include <iostream>
 #include <fstream>
+#include <streambuf>
 #include "json.hpp"
 #include <math.h>
 #include "FusionEKF.h"
