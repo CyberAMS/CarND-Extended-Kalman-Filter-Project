@@ -40,7 +40,6 @@ int main() {
 	// define constants
 	const bool bFILEOUTPUT = true;
 	const bool bDISPLAY = true;
-	bool bInitialized = false;
 	
   uWS::Hub h;
 	
@@ -107,15 +106,10 @@ int main() {
           		meas_package.timestamp_ = timestamp;
           }
 					
-					// define file for redirecting standard output
-					if (!bInitialized) {
-						ofstream out("out.txt");
-						streambuf *coutbuf = cout.rdbuf(); // save screen object
-						bInitialized = true;
-					}
-					
 					// redirect standard output to file if necessary
 					if (bFILEOUTPUT) {
+						ofstream out("out.txt", fstream::app); // define file for redirecting standard output and append
+						streambuf *coutbuf = cout.rdbuf(); // save screen object
 						cout.rdbuf(out.rdbuf());
 					}
 
