@@ -109,7 +109,7 @@ private:
 	const int NUM_LASER_MEASUREMENTS = 2;
 	const int NUM_RADAR_MEASUREMENTS = 3;
 	const int NUM_STATES = 4;
-	const int ZERO_DETECTION = 0.0001;
+	const double ZERO_DETECTION = 0.0001;
 
 	/**
 	 * Updates the state using y
