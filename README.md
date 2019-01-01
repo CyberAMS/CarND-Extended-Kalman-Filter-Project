@@ -233,6 +233,8 @@ In the simulator the blue dots are LIDAR measurements and the red dots are RADAR
 
 ![alt text][image1]
 
+<img src="190101_StAn_Udacity_SDC_ExtendedKF.gif" width="50%">
+
 The debugging output of this example can be found in [./build/out.txt](./build/out.txt).
 
 The final RMSE values are `[0.0973, 0.0855, 0.4513, 0.4399]` and therefore well below the maximum allowed error values `[0.11, 0.11, 0.52, 0.52]`.
