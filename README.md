@@ -229,9 +229,11 @@ Once the program is running and listening on port 4567 the simulator can be star
 
 ### 2. Simulation results
 
-In the simulator the blue dots are LIDAR measurements and the red dots are RADAR measurements. The sensor fusion results are shown as green dots and are clearly closer to the ground truth values than the individual measurements for LIDAR or RADAR (see image below).
+In the simulator the blue dots are LIDAR measurements and the red dots are RADAR measurements. The sensor fusion results are shown as green dots and are clearly closer to the ground truth values than the individual measurements for LIDAR or RADAR (see animation and final still image below).
 
 <img src="190101_StAn_Udacity_SDC_ExtendedKF.gif" width="100%">
+
+![alt text][image1]
 
 The debugging output of this example can be found in [./build/out.txt](./build/out.txt).
 
